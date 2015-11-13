@@ -1,0 +1,8 @@
+name = %%MODULE_TITLE%%
+description = %%MODULE_DESCRIPTION%%
+core = 7.x
+
+dependencies[] = entity
+dependencies[] = xautoload (>= 7.x-4.0)
+
+configure = %%ENTITY_TYPE_ADMIN_PATH%%

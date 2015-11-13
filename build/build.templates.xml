@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<project name="phingphpcodetemplates" phingVersion="2.10.0" default="usage">
+  <target name="usage"
+          depends="init">
+    <echo msg="Hello! Phing is used to allow developers to easily build, install and test ${phing.project.name}!"/>
+    <echo msg="A good way to get started is to create a build.properties file which tells phing about your environment and then run 'phing test' which will run the Behat tests and make sure that ${phing.project.name} is working correctly in your environment."/>
+  </target>
+
+  <!-- =============================================================================
+       Drupal entity Template targets: Building a module defining custom entity type
+       =============================================================================-->
+
+  <target name="drupal-custom-entity"
+          depends="init"
+          description="Create a module that defines a custom entity type.">
+    <!-- Module name -->
+    <if>
+      <not>
+        <isset property="drupal.custom-entity.module.machine-name"/>
+      </not>
+      <then>
+        <input propertyName="drupal.custom-entity.module.machine-name" promptChar=":" defaultValue="mymodule">Enter the module machine name</input>
+      </then>
+    </if>
+
+    <!-- Module title -->
+    <if>
+      <not>
+        <isset property="drupal.custom-entity.module.title"/>
+      </not>
+      <then>
+        <input propertyName="drupal.custom-entity.module.title" promptChar=":" defaultValue="My Module">Enter the module name (human version)</input>
+      </then>
+    </if>
+
+    <!-- Module description -->
+    <if>
+      <not>
+        <isset property="drupal.custom-entity.module.description"/>
+      </not>
+      <then>
+        <input propertyName="drupal.custom-entity.module.description" defaultValue="Provides a custom entity type.">Enter the module description:</input>
+      </then>
+    </if>
+
+    <!-- Entity title -->
+    <if>
+      <not>
+        <isset property="drupal.custom-entity.entity.title"/>
+      </not>
+      <then>
+        <input propertyName="drupal.custom-entity.entity.title" promptChar=":" defaultValue="Mymodule Custom Entity">Enter the entity title (human version)</input>
+      </then>
+    </if>
+
+    <!-- Entity title in the plural -->
+    <if>
+      <not>
+        <isset property="drupal.custom-entity.entity.title-plural"/>
+      </not>
+      <then>
+        <!--<php expression="${drupal.custom-entity.entity.title} . 's'" returnProperty="drupal.custom-entity.entity.title-plural"/>-->
+        <property name="drupal.custom-entity.entity.title-plural" value="${drupal.custom-entity.entity.title}s"/>
+        <input propertyName="drupal.custom-entity.entity.title-plural" promptChar=":" defaultValue="${drupal.custom-entity.entity.title-plural}">Enter the entity title in the plural</input>
+      </then>
+    </if>
+
+    <!-- Entity primary key -->
+    <if>
+      <not>
+        <isset property="drupal.custom-entity.entity.primary-key"/>
+      </not>
+      <then>
+        <property name="drupal.custom-entity.entity.primary-key" value="${drupal.custom-entity.module.machine-name}_id"/>
+        <input propertyName="drupal.custom-entity.entity.primary-key" promptChar=":" defaultValue="${drupal.custom-entity.entity.primary-key}">Enter the entity primary key (usually it ends with '_id')</input>
+      </then>
+    </if>
+
+    <!-- Entity title lowercase -->
+    <php expression="strtolower('${drupal.custom-entity.entity.title}')" returnProperty="drupal.custom-entity.entity.lowercase-name"/>
+
+    <!-- Entity CSS identifier -->
+    <css-identifier property="drupal.custom-entity.entity.css-name" string="${drupal.custom-entity.module.machine-name}" />
+
+    <!-- Entity class name -->
+    <if>
+      <not>
+        <isset property="drupal.custom-entity.entity.class-name"/>
+      </not>
+      <then>
+        <camel-case property="drupal.custom-entity.entity.class-name" string="${drupal.custom-entity.module.machine-name}" />
+        <input propertyName="drupal.custom-entity.entity.class-name" promptChar=":" defaultValue="${drupal.custom-entity.entity.class-name}">Enter the entity class name</input>
+      </then>
+    </if>
+
+    <!-- Entity class alias -->
+    <if>
+      <not>
+        <isset property="drupal.custom-entity.entity.class-alias"/>
+      </not>
+      <then>
+        <input propertyName="drupal.custom-entity.entity.class-alias" promptChar=":" defaultValue="${drupal.custom-entity.entity.class-name}">Enter the entity class alias (optional)</input>
+      </then>
+    </if>
+
+    <!-- Entity path -->
+    <if>
+      <not>
+        <isset property="drupal.custom-entity.entity.path"/>
+      </not>
+      <then>
+        <input propertyName="drupal.custom-entity.entity.path" promptChar=":" defaultValue="${drupal.custom-entity.entity.css-name}">Enter the entity base path</input>
+      </then>
+    </if>
+
+    <!-- Entity admin path -->
+    <!-- Here we display the content on the same parent element than the types,
+         to avoid putting lots of tabs on the admin/content menu.
+         @todo add an option to use a more standard admin/content/... path-->
+    <if>
+      <not>
+        <isset property="drupal.custom-entity.entity.admin-path"/>
+      </not>
+      <then>
+        <property name="drupal.custom-entity.entity.admin-path" value="admin/structure/${drupal.custom-entity.entity.css-name}/content"/>
+        <input propertyName="drupal.custom-entity.entity.admin-path" promptChar=":" defaultValue="${drupal.custom-entity.entity.admin-path}">Enter the entity admin path</input>
+      </then>
+    </if>
+
+    <if>
+      <not>
+        <isset property="drupal.custom-entity.entity-type.admin-path"/>
+      </not>
+      <then>
+        <property name="drupal.custom-entity.entity-type.admin-path" value="admin/structure/${drupal.custom-entity.entity.css-name}/types"/>
+        <input propertyName="drupal.custom-entity.entity-type.admin-path" promptChar=":" defaultValue="${drupal.custom-entity.entity-type.admin-path}">Enter the entity type admin path</input>
+      </then>
+    </if>
+
+    <!-- Entity view name -->
+    <if>
+      <not>
+        <isset property="drupal.custom-entity.entity.view-name"/>
+      </not>
+      <then>
+        <property name="drupal.custom-entity.entity.view-name" value="${drupal.custom-entity.module.machine-name}s"/>
+        <input propertyName="drupal.custom-entity.entity.view-name" promptChar=":" defaultValue="${drupal.custom-entity.entity.view-name}">Enter the view name</input>
+      </then>
+    </if>
+
+    <!-- Module group (hook) -->
+    <if>
+      <not>
+        <isset property="drupal.custom-entity.module.hook-group"/>
+      </not>
+      <then>
+        <property name="drupal.custom-entity.module.hook-group" value="${drupal.custom-entity.module.machine-name}s"/>
+      </then>
+    </if>
+
+    <property name="drupal.custom-entity.entity-type.class-name" value="${drupal.custom-entity.entity.class-name}Type"/>
+    <property name="drupal.custom-entity.entity-type.class-alias" value="${drupal.custom-entity.entity.class-alias}Type"/>
+
+    <property name="drupal.custom-entity.entity.view-name" value="admin_views_${drupal.custom-entity.module.machine-name}"/>
+
+    <echo msg="Machine name: ${drupal.custom-entity.module.machine-name}"/>
+    <echo msg="Module title: ${drupal.custom-entity.module.title}"/>
+    <echo msg="Module description: ${drupal.custom-entity.module.description}"/>
+    <echo msg="Module hook group: ${drupal.custom-entity.module.hook-group}"/>
+    <echo msg="Entity title: ${drupal.custom-entity.entity.title}"/>
+    <echo msg="Entity title in the plural: ${drupal.custom-entity.entity.title-plural}"/>
+    <echo msg="Entity title lowercase: ${drupal.custom-entity.entity.lowercase-name}"/>
+    <echo msg="Entity PK: ${drupal.custom-entity.entity.primary-key}"/>
+    <echo msg="Entity CSS identifier: ${drupal.custom-entity.entity.css-name}"/>
+    <echo msg="Entity class name: ${drupal.custom-entity.entity.class-name}"/>
+    <echo msg="Entity class alias: ${drupal.custom-entity.entity.class-alias}"/>
+    <echo msg="Entity base path: ${drupal.custom-entity.entity.path}"/>
+    <echo msg="Entity admin path: ${drupal.custom-entity.entity.admin-path}"/>
+    <echo msg="Entity Type admin path: ${drupal.custom-entity.entity-type.admin-path}"/>
+    <echo msg="Entity view name: ${drupal.custom-entity.entity.view-name}"/>
+    <echo msg="Entity Type class name: ${drupal.custom-entity.entity-type.class-name}"/>
+    <echo msg="Entity Type class alias: ${drupal.custom-entity.entity-type.class-alias}"/>
+
+
+
+    <filterchain id="token-replacements">
+      <replacetokens begintoken="%%" endtoken="%%">
+        <token key="MACHINE_NAME" value="${drupal.custom-entity.module.machine-name}" />
+        <token key="MODULE_TITLE" value="${drupal.custom-entity.module.title}" />
+        <token key="MODULE_DESCRIPTION" value="${drupal.custom-entity.module.description}" />
+        <token key="MODULE_HOOK_GROUP" value="${drupal.custom-entity.module.hook-group}" />
+
+        <token key="ENTITY_TITLE" value="${drupal.custom-entity.entity.title}" />
+        <token key="ENTITY_TITLE_PLURAL" value="${drupal.custom-entity.entity.title-plural}" />
+        <token key="ENTITY_LOWERCASE_NAME" value="${drupal.custom-entity.entity.lowercase-name}" />
+        <token key="ENTITY_CSS_NAME" value="${drupal.custom-entity.entity.css-name}" />
+        <token key="ENTITY_CLASS_NAME" value="${drupal.custom-entity.entity.class-name}" />
+        <token key="ENTITY_CLASS_ALIAS" value="${drupal.custom-entity.entity.class-alias}" />
+        <token key="ENTITY_PRIMARY_KEY" value="${drupal.custom-entity.entity.primary-key}" />
+        <token key="ENTITY_PATH" value="${drupal.custom-entity.entity.path}" />
+        <token key="ENTITY_ADMIN_PATH" value="${drupal.custom-entity.entity.admin-path}" />
+        <token key="ENTITY_VIEW_NAME" value="${drupal.custom-entity.entity.view-name}" />
+
+        <token key="ENTITY_TYPE_CLASS_NAME" value="${drupal.custom-entity.entity-type.class-name}" />
+        <token key="ENTITY_TYPE_CLASS_ALIAS" value="${drupal.custom-entity.entity-type.class-alias}" />
+        <token key="ENTITY_TYPE_ADMIN_PATH" value="${drupal.custom-entity.entity-type.admin-path}" />
+      </replacetokens>
+    </filterchain>
+
+    <!-- Copy files which name contain the module name. -->
+    <copy todir="${build.dir}/${drupal.custom-entity.module.machine-name}">
+      <fileset dir="${phing.dir}/build/templates/drupal/custom-entity" />
+      <mapper type="regexp" from="^(.*)mymodule(.*)$" to="\1${drupal.custom-entity.module.machine-name}\2"/>
+      <filterchain refid="token-replacements" />
+    </copy>
+
+    <!-- Copy template files.  -->
+    <copy todir="${build.dir}/${drupal.custom-entity.module.machine-name}">
+      <fileset dir="${phing.dir}/build/templates/drupal/custom-entity" />
+      <mapper type="regexp" from="^(.*)custom-entity(.*)$" to="\1${drupal.custom-entity.entity.css-name}\2"/>
+      <filterchain refid="token-replacements" />
+    </copy>
+
+    <!-- Copy files which name contains the entity class name.  -->
+    <copy todir="${build.dir}/${drupal.custom-entity.module.machine-name}">
+      <fileset dir="${phing.dir}/build/templates/drupal/custom-entity" />
+      <mapper type="regexp" from="^(.*)CustomEntity(.*)$" to="\1${drupal.custom-entity.entity.class-name}\2"/>
+      <filterchain refid="token-replacements" />
+    </copy>
+
+    <!-- Remaining files... -->
+    <copy todir="${build.dir}/${drupal.custom-entity.module.machine-name}" overwrite="false">
+      <fileset dir="${phing.dir}/build/templates/drupal/custom-entity">
+        <exclude name="**mymodule**" />
+        <exclude name="**custom-entity**" />
+        <exclude name="**CustomEntity**" />
+      </fileset>
+      <filterchain refid="token-replacements" />
+    </copy>
+  </target>
+
+  <taskdef name="css-identifier" classname="CssIdentifier"
+           classpath="${phing.dir}/build/lib" />
+
+  <taskdef name="camel-case" classname="CamelCase"
+           classpath="${phing.dir}/build/lib" />
+
+  <!-- =====================================================================
+       Internal targets: Used for really low-level setup.
+       ===================================================================== -->
+
+  <target name="css-identifier"
+          hidden="true">
+    <php expression="strtolower(${string})" returnProperty="string"/>
+    <php expression="strtr(${string},  array(' ' => '-', '_' => '-', '/' => '-', '[' => '-', ']' => ''))" returnProperty="string"/>
+    <php expression="preg_replace('/[^\x{002D}\x{0030}-\x{0039}\x{0041}-\x{005A}\x{005F}\x{0061}-\x{007A}\x{00A1}-\x{FFFF}]/u', '', ${string});" returnProperty="string"/>
+    <echo msg="${string}"/>
+  </target>
+
+  <target name="init"
+          description="Loads the build.properties with the correct defaults set."
+          unless="internal.done.load-properties"
+          hidden="true">
+    <property name="internal.done.load-properties" value="true"/>
+
+    <!-- First load the internal defaults. -->
+    <property file="${phing.dir}/build/build.default.properties" override="true"/>
+
+    <!-- Next, load the local defaults. -->
+    <property file="${phing.dir}/build.default.properties" override="true"/>
+
+    <!-- Finally, load the user's local defaults. -->
+    <property file="${phing.dir}/build.properties" override="true"/>
+  </target>
+
+</project>

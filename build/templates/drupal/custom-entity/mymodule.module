@@ -1,0 +1,689 @@
+<?php
+
+/**
+ * @file
+ * Implementation of %%MODULE_TITLE%%.
+ */
+
+use Drupal\%%MACHINE_NAME%%\Entity\%%ENTITY_CLASS_NAME%% as %%ENTITY_CLASS_ALIAS%%;
+use Drupal\%%MACHINE_NAME%%\Entity\%%ENTITY_TYPE_CLASS_NAME%% as %%ENTITY_TYPE_CLASS_ALIAS%%;
+
+/**
+ * Implements hook_hook_info().
+ */
+function %%MACHINE_NAME%%_hook_info() {
+  return array(
+    '%%MACHINE_NAME%%_access_alter' => array(
+      'group' => '%%MODULE_HOOK_GROUP%%',
+    ),
+  );
+}
+
+/**
+ * Implements hook_entity_info().
+ */
+function %%MACHINE_NAME%%_entity_info() {
+  $return['%%MACHINE_NAME%%'] = array(
+    'label' => t('%%ENTITY_TITLE%%'),
+    // The entity class and controller class extend the default entity classes.
+    'entity class' => 'Drupal\\%%MACHINE_NAME%%\\Entity\\%%ENTITY_CLASS_NAME%%',
+    'controller class' => 'Drupal\\%%MACHINE_NAME%%\\Entity\\APIController\\%%ENTITY_CLASS_NAME%%',
+    //'views controller class' => 'EntityDefaultViewsController',
+    'base table' => '%%MACHINE_NAME%%',
+    'fieldable' => TRUE,
+    'exportable' => TRUE,
+    'entity keys' => array(
+      'id' => '%%ENTITY_PRIMARY_KEY%%',
+      'bundle' => 'type',
+      'label' => 'label',
+      'language' => 'language',
+    ),
+    // Bundles are defined by the types below.
+    'bundles' => array(),
+    'bundle keys' => array(
+      'bundle' => 'type',
+    ),
+    'view modes' => array(
+      'full' => array(
+        'label' => t('Default'),
+        'custom settings' => FALSE,
+      ),
+    ),
+    'label callback' => '%%MACHINE_NAME%%_label',
+    'uri callback' => 'entity_class_uri',
+    'access callback' => '%%MACHINE_NAME%%_access',
+    'module' => '%%MACHINE_NAME%%',
+    // The information below is used by the Controller;
+    // which extends the EntityDefaultUIController.
+    'admin ui' => array(
+      'path' => '%%ENTITY_ADMIN_PATH%%',
+      'file' => 'includes/%%MACHINE_NAME%%.admin.inc',
+      'controller class' => 'Drupal\\%%MACHINE_NAME%%\\Entity\\UIController\\%%ENTITY_CLASS_NAME%%',
+      'menu wildcard' => '%%%MACHINE_NAME%%',
+    ),
+    // Add translation support.
+    'translation' => array(
+      'locale' => TRUE,
+      'entity_translation' => array(
+        'class' => 'Drupal\\%%MACHINE_NAME%%\\Entity\\TranslationHandler\\%%ENTITY_CLASS_NAME%%',
+        'bundle callback' => '%%MACHINE_NAME%%_entity_translation_supported_type',
+        'default settings' => array(
+          'default_language' => LANGUAGE_NONE,
+          'hide_language_selector' => FALSE,
+        ),
+        'base path' => '%%ENTITY_ADMIN_PATH%%/manage/%%%MACHINE_NAME%%',
+        'path wildcard' => '%%%MACHINE_NAME%%',
+      ),
+    ),
+    // Add title replacement support for translations.
+    'field replacement' => array(
+      'label' => array(
+        'field' => array(
+          'type' => 'text',
+          'cardinality' => 1,
+          'translatable' => TRUE,
+        ),
+        'instance' => array(
+          'label' => t('Label'),
+          'required' => TRUE,
+          'settings' => array(
+            'text_processing' => 0,
+          ),
+          'widget' => array(
+            'weight' => -5,
+          ),
+        ),
+      ),
+    ),
+    // Integrate with Inline Entity Form.
+    'inline entity form' => array(
+      'controller' => 'Drupal\\%%MACHINE_NAME%%\\Entity\\InlineFormController\\%%ENTITY_CLASS_NAME%%',
+    ),
+    'metadata controller class' => 'Drupal\\%%MACHINE_NAME%%\\Entity\\MetadataController\\%%ENTITY_CLASS_NAME%%',
+    //'metatags' => TRUE,
+    //'token type' => '%%MACHINE_NAME%%',
+  );
+  // The entity that holds information about the entity types.
+  $return['%%MACHINE_NAME%%_type'] = array(
+    'label' => t('%%ENTITY_TITLE%% Type'),
+    'entity class' => 'Drupal\\%%MACHINE_NAME%%\\Entity\\%%ENTITY_TYPE_CLASS_NAME%%',
+    'controller class' => 'Drupal\\%%MACHINE_NAME%%\\Entity\\APIController\\%%ENTITY_TYPE_CLASS_NAME%%',
+    'base table' => '%%MACHINE_NAME%%_type',
+    'fieldable' => FALSE,
+    'bundle of' => '%%MACHINE_NAME%%',
+    'exportable' => TRUE,
+    'metatags' => FALSE,
+    'entity keys' => array(
+      'id' => 'id',
+      'name' => 'type',
+      'label' => 'label',
+    ),
+    'access callback' => '%%MACHINE_NAME%%_type_access',
+    'module' => '%%MACHINE_NAME%%',
+    // Enable the entity API's admin UI.
+    'admin ui' => array(
+      'path' => '%%ENTITY_TYPE_ADMIN_PATH%%',
+      'file' => 'includes/%%MACHINE_NAME%%_type.admin.inc',
+      'controller class' => 'Drupal\\%%MACHINE_NAME%%\\Entity\\UIController\\%%ENTITY_TYPE_CLASS_NAME%%',
+    ),
+    'metadata controller class' => '',
+  );
+
+  return $return;
+}
+
+/**
+ * Implements hook_entity_info_alter().
+ */
+function %%MACHINE_NAME%%_entity_info_alter(&$entity_info) {
+  foreach (%%MACHINE_NAME%%_get_types() as $type => $info) {
+    $entity_info['%%MACHINE_NAME%%']['bundles'][$type] = array(
+      'label' => $info->label,
+      'admin' => array(
+        'path' => '%%ENTITY_TYPE_ADMIN_PATH%%/manage/%%%MACHINE_NAME%%_type',
+        'real path' => '%%ENTITY_TYPE_ADMIN_PATH%%/manage/' . $type,
+        'bundle argument' => 5,
+        'access arguments' => array('administer %%MACHINE_NAME%% types'),
+      ),
+    );
+  }
+}
+
+/**
+ * Implements hook_permission().
+ */
+function %%MACHINE_NAME%%_permission() {
+  // We set up permisssions to manage entity types, manage all entities and the
+  // permissions for each individual entity.
+  $permissions = array(
+    'administer %%MACHINE_NAME%% types' => array(
+      'title' => t('Administer %%ENTITY_LOWERCASE_NAME%% types'),
+      'description' => t('Create and delete fields for %%ENTITY_LOWERCASE_NAME%% types, and set their permissions.'),
+    ),
+    'administer %%MACHINE_NAME%% entities' => array(
+      'title' => t('Administer %%ENTITY_LOWERCASE_NAME%%'),
+      'description' => t('Edit and delete all %%ENTITY_TITLE_PLURAL%%'),
+    ),
+  );
+
+  // Generate permissions.
+  foreach (%%MACHINE_NAME%%_get_types() as $type) {
+    $type_name = check_plain($type->type);
+    $permissions += array(
+      "view any %%MACHINE_NAME%% entity of type $type_name" => array(
+        'title' => t('%type_name: view any %%ENTITY_LOWERCASE_NAME%%', array('%type_name' => $type->label)),
+      ),
+      "edit any %%MACHINE_NAME%% entity of type $type_name" => array(
+        'title' => t('%type_name: edit any %%ENTITY_LOWERCASE_NAME%%', array('%type_name' => $type->label)),
+      ),
+      "delete any %%MACHINE_NAME%% entity of type $type_name" => array(
+        'title' => t('%type_name: delete any %%ENTITY_LOWERCASE_NAME%%', array('%type_name' => $type->label)),
+      ),
+    );
+  }
+
+  return $permissions;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function %%MACHINE_NAME%%_theme() {
+  return array(
+    '%%MACHINE_NAME%%' => array(
+      'render element' => 'elements',
+      'path' => drupal_get_path('module', '%%MACHINE_NAME%%') . '/theme',
+      'template' => '%%ENTITY_CSS_NAME%%',
+      'file' => 'theme.inc',
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu_local_tasks_alter().
+ */
+function %%MACHINE_NAME%%_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+  // Add action link '%%ENTITY_ADMIN_PATH%%/add'
+  // on '%%ENTITY_ADMIN_PATH%%'.
+  if ($root_path == '%%ENTITY_ADMIN_PATH%%') {
+    $item = menu_get_item('%%ENTITY_ADMIN_PATH%%/add');
+    if ($item['access']) {
+      $data['actions']['output'][] = array(
+        '#theme' => 'menu_local_action',
+        '#link' => $item,
+      );
+    }
+  }
+}
+
+/**
+ * Determines whether the given user has access to a %%ENTITY_LOWERCASE_NAME%%.
+ *
+ * @param string $op
+ *   The operation being performed. One of 'view', 'update', 'create', 'delete'
+ *   or just 'edit' (being the same as 'create' or 'update').
+ *
+ * @param object $entity
+ *   Optionally a %%ENTITY_LOWERCASE_NAME%% or a %%ENTITY_LOWERCASE_NAME%% type to check access for.
+ *   If nothing is given, access for all %%ENTITY_LOWERCASE_NAME%% is determined.
+ *
+ * @param object $account
+ *   The user to check for. Leave it to NULL to check for the global user.
+ *
+ * @return bool
+ *   Whether access is allowed or not.
+ */
+function %%MACHINE_NAME%%_access($op, $entity = NULL, $account = NULL) {
+  if (user_access('administer %%MACHINE_NAME%% entities', $account)) {
+    return TRUE;
+  }
+
+  if (isset($entity) && $type_name = $entity->type) {
+    if (user_access("$op any %%MACHINE_NAME%% entity of type $type_name", $account)) {
+      return TRUE;
+    }
+  }
+
+  $access = FALSE;
+
+  // Allow other modules to change access.
+  $context = array(
+    'op' => $op,
+    'entity' => $entity,
+    'account' => $account,
+  );
+  drupal_alter('%%MACHINE_NAME%%_access', $access, $context);
+
+  return $access;
+}
+
+/**
+ * Implements hook_file_download_access().
+ *
+ * This hook is grants access to files based on a user's access to the entity
+ * a file is attached to. For example, users with access to a %%ENTITY_LOWERCASE_NAME%% should be
+ * allowed to download files attached to that %%ENTITY_LOWERCASE_NAME%%. Here we do this on a per-
+ * field basis for files attached to %%ENTITY_TITLE_PLURAL%%.
+ *
+ * @param $field
+ *   The field to which the file belongs.
+ * @param $entity_type
+ *   The type of $entity; for example, 'node' or 'user' or '%%MACHINE_NAME%%'.
+ * @param $entity
+ *   The $entity to which $file is referenced.
+ *
+ * @return
+ *   TRUE if access should be allowed by this entity or FALSE if denied. Note
+ *   that denial may be overridden by another entity controller, making this
+ *   grant permissive rather than restrictive.
+ */
+function %%MACHINE_NAME%%_file_download_access($field, $entity_type, $entity) {
+  if ($entity_type == '%%MACHINE_NAME%%') {
+    return field_access('view', $field, $entity_type, $entity);
+  }
+}
+
+/**
+ * Entity label callback.
+ */
+function %%MACHINE_NAME%%_label($entity, $entity_type) {
+  return empty($entity) ? t('New %%ENTITY_LOWERCASE_NAME%%') : $entity->label;
+}
+
+/**
+ * Access callback for the entity API.
+ */
+function %%MACHINE_NAME%%_type_access($op, $type = NULL, $account = NULL) {
+  return user_access('administer %%MACHINE_NAME%% types', $account);
+}
+
+/**
+ * Gets an array of all %%ENTITY_LOWERCASE_NAME%% types, keyed by the type name.
+ *
+ * @param string $type_name
+ *   If set, the type with the given name is returned.
+ *
+ * @return mixed
+ *   Depending whether $type isset, an array of %%ENTITY_LOWERCASE_NAME%% types
+ *   or a single one.
+ */
+function %%MACHINE_NAME%%_get_types($type_name = NULL) {
+  // Use the advanced drupal_static() pattern since this is called very often.
+  static $drupal_static_fast;
+  $cache_key = '%%MACHINE_NAME%%_types';
+
+  if (!isset($drupal_static_fast)) {
+    $drupal_static_fast[$cache_key] = &drupal_static(__FUNCTION__);
+  }
+  $%%MACHINE_NAME%%_types = &$drupal_static_fast[$cache_key];
+
+  if (empty($%%MACHINE_NAME%%_types)) {
+    if ($cache = cache_get($cache_key)) {
+      $%%MACHINE_NAME%%_types = $cache->data;
+    }
+  }
+  // $%%MACHINE_NAME%%_types may be set but might not have our $type_name if
+  // called first for other $type_name.
+  if (empty($%%MACHINE_NAME%%_types) || (isset($type_name) && empty($%%MACHINE_NAME%%_types[$type_name]))) {
+    if (!isset($type_name)) {
+      $%%MACHINE_NAME%%_types = entity_load_multiple_by_name('%%MACHINE_NAME%%_type', FALSE);
+    }
+    else {
+      $types = entity_load_multiple_by_name('%%MACHINE_NAME%%_type', array($type_name));
+      if (empty($types)) {
+        return FALSE;
+      }
+      $%%MACHINE_NAME%%_types[$type_name] = array_shift($types);
+    }
+    if (!isset($type_name)) {
+      // Only set the cache if retrieved all %%ENTITY_LOWERCASE_NAME%% types.
+      cache_set($cache_key, $%%MACHINE_NAME%%_types);
+    }
+  }
+  if (isset($type_name)) {
+    // Even though $type_name was set it might not be valid
+    return isset($%%MACHINE_NAME%%_types[$type_name]) ? $%%MACHINE_NAME%%_types[$type_name] : NULL;
+  }
+  return $%%MACHINE_NAME%%_types;
+}
+
+/**
+ * Clears the %%ENTITY_LOWERCASE_NAME%% type cache.
+ */
+function %%MACHINE_NAME%%_type_cache_reset() {
+  cache_clear_all('%%MACHINE_NAME%%_types', 'cache');
+  drupal_static_reset('%%MACHINE_NAME%%_get_types');
+}
+
+/**
+ * Menu argument loader; Load a %%ENTITY_LOWERCASE_NAME%% type by string.
+ *
+ * @param string $type
+ *   The machine-readable name of a %%ENTITY_LOWERCASE_NAME%% type to load.
+ *
+ * @return %%ENTITY_TYPE_CLASS_ALIAS%%
+ *   A %%ENTITY_LOWERCASE_NAME%% type array or FALSE if $type does not exist.
+ */
+function %%MACHINE_NAME%%_type_load($type) {
+  return %%MACHINE_NAME%%_get_types($type);
+}
+
+/**
+ * Fetch a %%ENTITY_LOWERCASE_NAME%% object.
+ *
+ * @param int $%%ENTITY_PRIMARY_KEY%%
+ *   Integer specifying the %%ENTITY_LOWERCASE_NAME%% id.
+ *
+ * @return %%ENTITY_CLASS_ALIAS%%
+ *   A fully-loaded object or FALSE if it cannot be loaded.
+ *
+ * @see entity_load_single()
+ */
+function %%MACHINE_NAME%%_load($%%ENTITY_PRIMARY_KEY%%) {
+  return entity_load_single('%%MACHINE_NAME%%', $%%ENTITY_PRIMARY_KEY%%);
+}
+
+/**
+ * Load multiple %%ENTITY_LOWERCASE_NAME%% based on certain conditions.
+ *
+ * @param array $%%ENTITY_PRIMARY_KEY%%s
+ *   An array of %%ENTITY_LOWERCASE_NAME%% IDs.
+ *
+ * @param array $conditions
+ *   An array of conditions to match against the {%%MACHINE_NAME%%} table.
+ *
+ * @param bool $reset
+ *   A boolean indicating that the internal cache should be reset.
+ *
+ * @return %%ENTITY_CLASS_ALIAS%%[]
+ *   An array of objects, indexed by %%ENTITY_PRIMARY_KEY%%.
+ *
+ * @see entity_load()
+ * @see %%MACHINE_NAME%%_load()
+ */
+function %%MACHINE_NAME%%_load_multiple($%%ENTITY_PRIMARY_KEY%%s = array(), $conditions = array(), $reset = FALSE) {
+  return entity_load('%%MACHINE_NAME%%', $%%ENTITY_PRIMARY_KEY%%s, $conditions, $reset);
+}
+
+/**
+ * Deletes a %%ENTITY_LOWERCASE_NAME%%.
+ */
+function %%MACHINE_NAME%%_delete(%%ENTITY_CLASS_ALIAS%% $%%MACHINE_NAME%%) {
+  $%%MACHINE_NAME%%->delete();
+}
+
+/**
+ * Delete multiple %%ENTITY_LOWERCASE_NAME%%.
+ *
+ * @param array $%%ENTITY_PRIMARY_KEY%%s
+ *   An array of %%ENTITY_LOWERCASE_NAME%% IDs.
+ */
+function %%MACHINE_NAME%%_delete_multiple(array $%%ENTITY_PRIMARY_KEY%%s) {
+  return entity_delete_multiple('%%MACHINE_NAME%%', $%%ENTITY_PRIMARY_KEY%%s);
+}
+
+/**
+ * Create a %%ENTITY_LOWERCASE_NAME%% object.
+ *
+ * @return %%ENTITY_CLASS_ALIAS%%
+ */
+function %%MACHINE_NAME%%_create($values = array()) {
+  return entity_create('%%MACHINE_NAME%%', $values);
+}
+
+/**
+ * Saves a %%ENTITY_LOWERCASE_NAME%% to the database.
+ *
+ * @param string $%%MACHINE_NAME%%
+ *   The %%ENTITY_LOWERCASE_NAME%% object.
+ */
+function %%MACHINE_NAME%%_save(%%ENTITY_CLASS_ALIAS%% $%%MACHINE_NAME%%) {
+  return entity_save('%%MACHINE_NAME%%', $%%MACHINE_NAME%%);
+}
+
+/**
+ * Saves a %%ENTITY_LOWERCASE_NAME%% type to the db.
+ */
+function %%MACHINE_NAME%%_type_save(%%ENTITY_TYPE_CLASS_ALIAS%% $type) {
+  return entity_save('%%MACHINE_NAME%%_type', $type);
+}
+
+/**
+ * Deletes a %%ENTITY_LOWERCASE_NAME%% type from the db.
+ */
+function %%MACHINE_NAME%%_type_delete(%%ENTITY_TYPE_CLASS_ALIAS%% $type) {
+  $type->delete();
+}
+
+/**
+ * Menu title callback for showing individual entities.
+ */
+function %%MACHINE_NAME%%_page_title(%%ENTITY_CLASS_ALIAS%% $%%MACHINE_NAME%%) {
+  return $%%MACHINE_NAME%%->label;
+}
+
+/**
+ * Sets up content to show an individual %%ENTITY_LOWERCASE_NAME%%.
+ */
+function %%MACHINE_NAME%%_page_view(%%ENTITY_CLASS_ALIAS%% $%%MACHINE_NAME%%, $view_mode = 'full') {
+  return entity_view('%%MACHINE_NAME%%', array($%%MACHINE_NAME%%), $view_mode);
+}
+
+/**
+ * Returns the options list for the %%ENTITY_LOWERCASE_NAME%% status property.
+ */
+function %%MACHINE_NAME%%_status_options_list() {
+  return array(
+    0 => t('Disabled'),
+    1 => t('Active'),
+  );
+}
+
+/**
+ * Implements hook_action_info().
+ */
+function %%MACHINE_NAME%%_action_info() {
+  return array(
+    '%%MACHINE_NAME%%_enable_action' => array(
+      'type' => '%%MACHINE_NAME%%',
+      'label' => t('Enable %%ENTITY_LOWERCASE_NAME%%'),
+      'configurable' => FALSE,
+      'behavior' => array('changes_property'),
+    ),
+    '%%MACHINE_NAME%%_disable_action' => array(
+      'type' => '%%MACHINE_NAME%%',
+      'label' => t('Disable %%ENTITY_LOWERCASE_NAME%%'),
+      'configurable' => FALSE,
+      'behavior' => array('changes_property'),
+    ),
+    '%%MACHINE_NAME%%_assign_creator_action' => array(
+      'type' => '%%MACHINE_NAME%%',
+      'label' => t('Change the creator of %%ENTITY_LOWERCASE_NAME%%'),
+      'configurable' => TRUE,
+      'behavior' => array('changes_property'),
+    ),
+    '%%MACHINE_NAME%%_save_action' => array(
+      'type' => '%%MACHINE_NAME%%',
+      'label' => t('Save %%ENTITY_LOWERCASE_NAME%%'),
+      'configurable' => FALSE,
+    ),
+  );
+}
+
+/**
+ * Sets the status of a %%ENTITY_LOWERCASE_NAME%% to 1 (active).
+ *
+ * @param %%ENTITY_CLASS_ALIAS%% $%%MACHINE_NAME%%
+ *   A %%ENTITY_LOWERCASE_NAME%% object.
+ * @param $context
+ *   (optional) Array of additional information about what triggered the action.
+ *   Not used for this action.
+ *
+ * @ingroup actions
+ */
+function %%MACHINE_NAME%%_enable_action(%%ENTITY_CLASS_ALIAS%% $%%MACHINE_NAME%%, $context = array()) {
+  $%%MACHINE_NAME%%->status = 1;
+  $type = %%MACHINE_NAME%%_get_types($%%MACHINE_NAME%%->type);
+  watchdog('action', 'Set @type %title to active.', array('@type' => $type->label, '%title' => $%%MACHINE_NAME%%->label));
+}
+
+/**
+ * Sets the status of a %%ENTITY_LOWERCASE_NAME%% to 0 (disabled).
+ *
+ * @param %%ENTITY_CLASS_ALIAS%% $%%MACHINE_NAME%%
+ *   A %%ENTITY_LOWERCASE_NAME%% object.
+ * @param $context
+ *   (optional) Array of additional information about what triggered the action.
+ *   Not used for this action.
+ *
+ * @ingroup actions
+ */
+function %%MACHINE_NAME%%_disable_action(%%ENTITY_CLASS_ALIAS%% $%%MACHINE_NAME%%, $context = array()) {
+  $%%MACHINE_NAME%%->status = 0;
+  $type = %%MACHINE_NAME%%_get_types($%%MACHINE_NAME%%->type);
+  watchdog('action', 'Set @type %title to disabled.', array('@type' => $type->label, '%title' => $%%MACHINE_NAME%%->label));
+}
+
+/**
+ * Saves a %%ENTITY_LOWERCASE_NAME%%.
+ *
+ * @param %%ENTITY_CLASS_ALIAS%% $%%MACHINE_NAME%%
+ *   A %%ENTITY_LOWERCASE_NAME%% object.
+ * @param $context
+ *   (optional) Array of additional information about what triggered the action.
+ *   Not used for this action.
+ *
+ * @ingroup actions
+ */
+function %%MACHINE_NAME%%_save_action(%%ENTITY_CLASS_ALIAS%% $%%MACHINE_NAME%%, $context = array()) {
+  return entity_save('%%MACHINE_NAME%%', $%%MACHINE_NAME%%);
+  $type = %%MACHINE_NAME%%_get_types($%%MACHINE_NAME%%->type);
+  watchdog('action', 'Saved @type %title', array('@type' => $type->label, '%title' => $%%MACHINE_NAME%%->label));
+}
+
+/**
+ * Assigns a user as creator of a %%ENTITY_LOWERCASE_NAME%%.
+ *
+ * @param %%ENTITY_CLASS_ALIAS%% $%%MACHINE_NAME%%
+ *   A %%ENTITY_LOWERCASE_NAME%% object.
+ * @param $context
+ *   Array with the following elements:
+ *   - 'user_uid': User ID to assign to the %%ENTITY_LOWERCASE_NAME%%.
+ *
+ * @see %%MACHINE_NAME%%_assign_creator_action_form()
+ * @see %%MACHINE_NAME%%_assign_creator_action_validate()
+ * @see %%MACHINE_NAME%%_assign_creator_action_submit()
+ * @ingroup actions
+ */
+function %%MACHINE_NAME%%_assign_creator_action(%%ENTITY_CLASS_ALIAS%% $%%MACHINE_NAME%%, $context = array()) {
+  $%%MACHINE_NAME%%->uid = $context['user_uid'];
+  $creator_name = db_query("SELECT name FROM {users} WHERE uid = :uid", array(':uid' => $context['user_uid']))->fetchField();
+  $type = %%MACHINE_NAME%%_get_types($%%MACHINE_NAME%%->type);
+  watchdog('action', 'Changed creator of @type %title to uid %name.', array('@type' =>  $type->label, '%title' => $%%MACHINE_NAME%%->label, '%name' => $creator_name));
+}
+
+/**
+ * Generates the settings form for %%MACHINE_NAME%%_assign_creator_action().
+ *
+ * @param $context
+ *   Array of additional information about what triggered the action. Includes
+ *   the following elements:
+ *   - 'user_uid': User ID to assign to the %%ENTITY_LOWERCASE_NAME%%.
+ *
+ * @see %%MACHINE_NAME%%_assign_creator_action_submit()
+ * @see %%MACHINE_NAME%%_assign_creator_action_validate()
+ *
+ * @ingroup forms
+ */
+function %%MACHINE_NAME%%_assign_creator_action_form($context) {
+  $description = t('The username of the user to which you would like to assign ownership.');
+  $count = db_query("SELECT COUNT(*) FROM {users}")->fetchField();
+  $creator_name = '';
+  if (isset($context['user_uid'])) {
+    $creator_name = db_query("SELECT name FROM {users} WHERE uid = :uid", array(':uid' => $context['user_uid']))->fetchField();
+  }
+
+  // Use dropdown for fewer than 200 users; textbox for more than that.
+  if (intval($count) < 200) {
+    $options = array();
+    $result = db_query("SELECT uid, name FROM {users} WHERE uid > 0 ORDER BY name");
+    foreach ($result as $data) {
+      $options[$data->name] = $data->name;
+    }
+    $form['creator_name'] = array(
+      '#type' => 'select',
+      '#title' => t('Username'),
+      '#default_value' => $creator_name,
+      '#options' => $options,
+      '#description' => $description,
+    );
+  }
+  else {
+    $form['creator_name'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Username'),
+      '#default_value' => $creator_name,
+      '#autocomplete_path' => 'user/autocomplete',
+      '#size' => '6',
+      '#maxlength' => '60',
+      '#description' => $description,
+    );
+  }
+  return $form;
+}
+
+/**
+ * Validates settings form for %%MACHINE_NAME%%_assign_creator_action().
+ *
+ * @see %%MACHINE_NAME%%_assign_creator_action_submit()
+ */
+function %%MACHINE_NAME%%_assign_creator_action_validate($form, $form_state) {
+  $exists = (bool) db_query_range('SELECT 1 FROM {users} WHERE name = :name', 0, 1, array(':name' => $form_state['values']['creator_name']))->fetchField();
+  if (!$exists) {
+    form_set_error('creator_name', t('Enter a valid username.'));
+  }
+}
+
+/**
+ * Saves settings form for %%MACHINE_NAME%%_assign_creator_action().
+ *
+ * @see %%MACHINE_NAME%%_assign_creator_action_validate()
+ */
+function %%MACHINE_NAME%%_assign_creator_action_submit($form, $form_state) {
+  // Username can change, so we need to store the ID, not the username.
+  $uid = db_query('SELECT uid from {users} WHERE name = :name', array(':name' => $form_state['values']['creator_name']))->fetchField();
+  return array('user_uid' => $uid);
+}
+
+/**
+ * Returns whether the given %%ENTITY_LOWERCASE_NAME%% type has support for translations.
+ *
+ * @param $type
+ *   The machine-name of the %%ENTITY_LOWERCASE_NAME%% type to check for translation support.
+ *
+ * @return
+ *   TRUE or FALSE indicating translation support for the requested type.
+ */
+function %%MACHINE_NAME%%_entity_translation_supported_type($type) {
+  return variable_get('language_%%MACHINE_NAME%%_type_' . $type, 0) == ENTITY_TRANSLATION_ENABLED;
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function %%MACHINE_NAME%%_views_api($module = NULL, $api = NULL) {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', '%%MACHINE_NAME%%') . '/includes/views',
+  );
+}
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function %%MACHINE_NAME%%_ctools_plugin_directory($owner, $plugin_type) {
+  if (in_array($owner, array('page_manager', 'panelizer'))) {
+    return 'plugins/' . $owner . '/' . $plugin_type;
+  }
+}
+

@@ -1,0 +1,10 @@
+# Temporary build folder.
+/build-temp
+
+# Phing stuffs
+/bin
+/vendor
+/composer.phar
+/build-temp
+/build.properties
+
