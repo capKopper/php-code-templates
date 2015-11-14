@@ -22,7 +22,7 @@ class %%ENTITY_CLASS_NAME%% extends \PanelizerEntityDefault {
   // the entity type admin path. This last should not exceed 5 parts (from 0 to
   // 4) otherwise the maximum number of elements for a menu item (8) will be
   // overtaken.
-  // If all is OK there, you need to uncomment the 2 foloowing lines and the
+  // If all is OK there, you need to uncomment the 2 following lines and the
   // method "hook_page_alter".
   //public $entity_admin_root = '%%ENTITY_ADMIN_PATH%%/manage/%';
 
@@ -107,7 +107,7 @@ class %%ENTITY_CLASS_NAME%% extends \PanelizerEntityDefault {
     }
   }
 
-  public function hook_page_alter(&$page) {
+  /*public function hook_page_alter(&$page) {
     // Add an extra "Panelizer" action on the %%ENTITY_LOWERCASE_NAME%% types admin page.
     if ($_GET['q'] == '%%ENTITY_TYPE_ADMIN_PATH%%') {
       // This only works with some themes.
@@ -142,7 +142,7 @@ class %%ENTITY_CLASS_NAME%% extends \PanelizerEntityDefault {
         }
       }
     }
-  }
+  }*/
 
   /**
    * (@inheritdoc)
