@@ -23,7 +23,7 @@ class %%ENTITY_CLASS_NAME%% extends \EntityInlineEntityFormController {
    */
   public function entityForm($entity_form, &$form_state) {
     module_load_include('inc', '%%MACHINE_NAME%%', 'includes/%%MACHINE_NAME%%.admin');
-    return %%MACHINE_NAME%%_form($entity_form, $form_state, $entity_form['#entity']);
+    return %%MACHINE_NAME%%_form($entity_form, $form_state, $entity_form['#entity'], $entity_form['#op'], $entity_form['#entity_type']);
   }
 
 }
