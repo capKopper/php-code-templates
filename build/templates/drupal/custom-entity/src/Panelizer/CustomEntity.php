@@ -74,7 +74,7 @@ class %%ENTITY_CLASS_NAME%% extends \PanelizerEntityDefault {
    * in page manager for rendering.
    */
   public function hook_default_page_manager_handlers(&$handlers) {
-    $handler = new stdClass;
+    $handler = new \stdClass;
     $handler->disabled = FALSE; /* Edit this to true to make a default handler disabled initially */
     $handler->api_version = 1;
     $handler->name = '%%MACHINE_NAME%%_view_panelizer';
