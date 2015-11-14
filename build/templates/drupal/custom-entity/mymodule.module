@@ -50,6 +50,7 @@ function %%MACHINE_NAME%%_entity_info() {
       ),
     ),
     'label callback' => '%%MACHINE_NAME%%_label',
+    'plural label' => '%%ENTITY_TITLE_PLURAL%%',
     'uri callback' => 'entity_class_uri',
     'access callback' => '%%MACHINE_NAME%%_access',
     'module' => '%%MACHINE_NAME%%',
