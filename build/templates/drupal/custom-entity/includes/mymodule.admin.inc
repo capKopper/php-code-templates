@@ -31,7 +31,7 @@ function %%MACHINE_NAME%%_form($form, &$form_state, %%ENTITY_CLASS_ALIAS%% $%%MA
     $langcode = LANGUAGE_NONE;
   }
 
-  field_attach_form('%%MACHINE_NAME%%', $%%MACHINE_NAME%%, $form, $form_state);
+  field_attach_form('%%MACHINE_NAME%%', $%%MACHINE_NAME%%, $form, $form_state, $langcode);
 
   $form['status'] = array(
     '#type' => 'radios',
@@ -44,8 +44,6 @@ function %%MACHINE_NAME%%_form($form, &$form_state, %%ENTITY_CLASS_ALIAS%% $%%MA
     '#required' => TRUE,
     '#weight' => 35,
   );
-
-  field_attach_form('%%MACHINE_NAME%%', $%%MACHINE_NAME%%, $form, $form_state);
 
   $form['actions'] = array(
     '#type' => 'container',
