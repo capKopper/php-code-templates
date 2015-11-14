@@ -285,6 +285,48 @@ function %%MACHINE_NAME%%_file_download_access($field, $entity_type, $entity) {
 }
 
 /**
+ * Implements hook_field_extra_fields().
+ */
+function %%MACHINE_NAME%%_field_extra_fields() {
+  $extra = &drupal_static(__FUNCTION__);
+
+  if (!isset($extra)) {
+    $types = %%MACHINE_NAME%%_get_types();
+
+    while(list($type) = each($types)) {
+      $extra['%%MACHINE_NAME%%'][$type] = array(
+        'form' => array(
+          'label' => array(
+            'label' => t('Label'),
+            'description' => t('%%ENTITY_TITLE%% label form element'),
+            'weight' => -5,
+          ),
+          'status' => array(
+            'label' => t('Status'),
+            'description' => t('%%ENTITY_TITLE%% status form element'),
+            'weight' => 35,
+          ),
+        ),
+        'display' => array(
+          'label' => array(
+            'label' => t('Label'),
+            'description' => t('%%ENTITY_TITLE%% label'),
+            'weight' => -5,
+          ),
+          'status' => array(
+            'label' => t('Status'),
+            'description' => t('Whether the %%ENTITY_TITLE%% is active or disabled'),
+            'weight' => 5,
+          ),
+        ),
+      );
+    }
+  }
+
+  return $extra;
+}
+
+/**
  * Entity label callback.
  */
 function %%MACHINE_NAME%%_label($entity, $entity_type) {
