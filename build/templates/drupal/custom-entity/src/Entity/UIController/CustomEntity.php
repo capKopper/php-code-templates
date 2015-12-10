@@ -47,14 +47,17 @@ class %%ENTITY_CLASS_NAME%% extends \EntityDefaultUIController {
       'file' => 'includes/%%MACHINE_NAME%%.admin.inc',
     );
 
-    $items['%%ENTITY_PATH%%/' . $wildcard] = array(
+    unset($items[$this->path . '/import']); // Remove this for exportable entities.
+
+    // Remove this if there is an defined URI callback.
+    /*$items['%%ENTITY_PATH%%/' . $wildcard] = array(
       'title callback' => '%%MACHINE_NAME%%_page_title',
       'title arguments' => array(1),
       'page callback' => '%%MACHINE_NAME%%_page_view',
       'page arguments' => array(1),
       'access callback' => 'entity_access',
       'access arguments' => array('view', $this->entityType),
-    );
+    );*/
 
     return $items;
   }

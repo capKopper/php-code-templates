@@ -31,7 +31,7 @@ function %%MACHINE_NAME%%_entity_info() {
     //'views controller class' => 'EntityDefaultViewsController',
     'base table' => '%%MACHINE_NAME%%',
     'fieldable' => TRUE,
-    'exportable' => TRUE,
+    'exportable' => FALSE,
     'entity keys' => array(
       'id' => '%%ENTITY_PRIMARY_KEY%%',
       'bundle' => 'type',
@@ -51,7 +51,7 @@ function %%MACHINE_NAME%%_entity_info() {
     ),
     'label callback' => '%%MACHINE_NAME%%_label',
     'plural label' => '%%ENTITY_TITLE_PLURAL%%',
-    'uri callback' => 'entity_class_uri',
+    'uri callback' => NULL, // Use 'entity_class_uri' and update
     'access callback' => '%%MACHINE_NAME%%_access',
     'module' => '%%MACHINE_NAME%%',
     // The information below is used by the Controller;
