@@ -1,0 +1,9 @@
+body.navbar-tray-open.navbar-fixed.navbar-vertical #navbar-administration.navbar-oriented,
+#navbar-administration.navbar-oriented .navbar-tray-vertical,
+#navbar-administration.navbar-oriented .navbar-tray-vertical > .navbar-lining:before {
+  @include rem-fallback(width, 22);
+}
+
+body.navbar-tray-open.navbar-vertical.navbar-fixed {
+  @include rem-fallback(margin-left, 22);
+}

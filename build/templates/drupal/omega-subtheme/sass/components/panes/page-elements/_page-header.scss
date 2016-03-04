@@ -1,0 +1,15 @@
+.brand-logo {
+  span.site-name {
+    display: none;
+  }
+
+  a.home-link {
+    @include sprite-icon('logo', true);
+    display: block;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}

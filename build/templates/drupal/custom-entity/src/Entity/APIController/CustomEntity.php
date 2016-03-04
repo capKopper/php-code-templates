@@ -98,7 +98,17 @@ class %%ENTITY_CLASS_NAME%% extends \EntityAPIController {
    *   The renderable array.
    */
   public function buildContent($entity, $view_mode = 'full', $langcode = NULL, $content = array()) {
-    $content['title'] = array(
+    $content = $this->buildExtraFields($entity, $view_mode, $langcode, $content);
+    return parent::buildContent($entity, $view_mode, $langcode, $content);
+  }
+
+  /**
+   * Return the extra fields for the given entity.
+   *
+   * @return array
+   */
+  public function buildExtraFields($entity, $view_mode = 'full', $langcode = NULL, $content = array()) {
+    $content['label'] = array(
       '#type' => 'item',
       '#title' => t('Label'),
       '#markup' => check_plain($entity->label),
@@ -112,7 +122,7 @@ class %%ENTITY_CLASS_NAME%% extends \EntityAPIController {
       '#markup' => $statuses[(int) (isset($entity->status) && (bool) $entity->status)],
     );
 
-    return parent::buildContent($entity, $view_mode, $langcode, $content);
+    return $content;
   }
 
 }

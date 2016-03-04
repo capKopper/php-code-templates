@@ -1,0 +1,205 @@
+.form-item, .form-actions {
+  vertical-align: middle;
+}
+
+.form-item {
+  label {
+    font-weight: normal;
+  }
+
+  .description {
+    color: color('grey-162');
+    font-size: 100%;
+  }
+}
+
+.form-required {
+  color: red;
+}
+
+input.form-text,
+textarea.form-textarea {
+  @include box-sizing(border-box);
+  background-color: color('grey-235');
+  border: 0 none;
+  height: 3.05em;
+  padding: 0.4em 1.2em;
+  width: 100%;
+
+  @include breakpoint($medium, true) {
+    padding: 0.45em 1.2em;
+  }
+
+  @include input-placeholder {
+    color: blue;
+    font-style: italic;
+  }
+
+  &.error {
+    outline: 1px solid #ED541D;
+  }
+}
+
+select.form-select {
+  @include appearance(none);
+  @include box-sizing(border-box);
+  background-color: transparent;
+  border: 0 none;
+  cursor: pointer;
+  height: 3.05em;
+  max-width: 100%; // This does not really work...
+  outline: none;
+  padding: 0.353em 1.2em;
+  position: relative;
+  width: 100%;
+  z-index: 1;
+
+  @include breakpoint($medium, true) {
+    padding: 0.39em 2.2em 0.39em 1.2em;
+  }
+
+  &:-moz-focusring {
+    color: transparent;
+    text-shadow: 0 0 0 black;
+  }
+
+  option {
+    background-color: white;
+  }
+}
+
+.form-select-wrapper {
+  background-color: color('grey-235');
+  display: inline-block;
+  position: relative;
+  width: 100%;
+
+  @include clearfix;
+
+  .ajax-progress-throbber {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    z-index: 1;
+  }
+}
+
+.chosen-container {
+  min-width: 150px;
+
+  .chosen-single {
+    background: white;
+    border: 0 none;
+    color: color('grey-162');
+    height: 40px;
+
+    span {
+      font-size: 18px;
+      padding: 8px;
+    }
+
+    div {
+      background: white image-url('select.png') no-repeat 100% 50%;
+      width: 50px;
+
+      @include background-size(auto 70%);
+
+      b {
+        display: none;
+      }
+    }
+  }
+
+  .chosen-results {
+    color: color('grey-45');
+
+    li.highlighted {
+      background: color('grey-235');
+      color: color('grey-45');
+    }
+  }
+}
+
+.form-type-checkbox {
+  input.form-checkbox {
+    display: none;
+
+    & + label {
+      vertical-align: text-bottom;
+
+      &:before {
+        @include fa-icon($fa-var-square);
+        color: color('grey-235');
+        display: inline-block;
+        margin-right: 10px;
+        margin-top: .3em;
+        overflow: hidden;
+        vertical-align: text-bottom;
+        width: 1.2em;
+      }
+    }
+
+    &:checked + label:before {
+      color: blue;
+    }
+  }
+}
+
+.form-type-radios {
+  input.form-radio {
+    display: none;
+
+    & + label {
+      vertical-align: text-bottom;
+
+      &:before {
+        @include fa-icon($fa-var-circle);
+        color: color('grey-235');
+        margin-right: 10px;
+        margin-top: .3em;
+        overflow: hidden;
+        vertical-align: text-bottom;
+        width: 1.2em;
+      }
+    }
+
+    &:checked + label:before {
+      color: blue;
+    }
+  }
+}
+
+input.form-submit {
+  @include button;
+  @include transition(background-color 0.2s, color 0.3s);
+
+  &.form-disabled {
+    background-color: color('grey-235');
+    border-color: color('grey-45');
+    color: color('grey-45');
+
+    &:hover {
+      color: color('grey-45');
+    }
+  }
+}
+
+fieldset.date-combo {
+  border: 0 none;
+  margin: 0;
+  padding: 0;
+
+  .container-inline-date .date-padding {
+    padding-left: 0;
+  }
+}
+
+.form-managed-file {
+  input.form-submit {
+    font-size: 14px;
+    line-height: 18px;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    padding: .4em 1em;
+  }
+}

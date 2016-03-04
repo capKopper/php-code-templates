@@ -1,0 +1,96 @@
+name = %%THEME_TITLE%%
+description = %%THEME_DESCRIPTION%%
+base theme = omega
+screenshot = screenshot.png
+engine = phptemplate
+core = 7.x
+
+scripts[] = js/%%MACHINE_NAME%%.behaviors.js
+
+; ========================================
+; Stylesheets
+; ========================================
+stylesheets[all][] = css/%%MACHINE_NAME%%.normalize.css
+stylesheets[all][] = css/%%MACHINE_NAME%%.hacks.css
+stylesheets[all][] = css/%%MACHINE_NAME%%.styles.css
+stylesheets[all][] = css/%%MACHINE_NAME%%.no-query.css
+stylesheets[all][] = radix_layouts.css
+stylesheets[all][] = flexslider_img.css
+stylesheets[all][] = menu_minipanels.css
+
+; ========================================
+; Regions
+; ========================================
+regions[header] = Header
+regions[highlighted] = Highlighted
+regions[content] = Content
+regions[footer] = Footer
+
+; ========================================
+; Breakpoints
+; ========================================
+breakpoints[tiny] = (max-width: 320px)
+breakpoints[small] = (min-width: 320px) and (max-width: 480px)
+breakpoints[narrow] = (min-width: 480px) and (max-width: 768px)
+breakpoints[medium] = (min-width: 768px) and (max-width: 1216px)
+breakpoints[wide] = (min-width: 1216px)
+
+; ========================================
+; Settings
+; ========================================
+settings[toggle_logo] = 1
+settings[toggle_name] = 1
+settings[toggle_slogan] = 1
+settings[toggle_node_user_picture] = 1
+settings[toggle_comment_user_picture] = 1
+settings[toggle_comment_user_verification] = 1
+settings[toggle_favicon] = 1
+settings[toggle_main_menu] = 1
+settings[toggle_secondary_menu] = 1
+settings[omega_toggle_front_page_content] = 1
+settings[default_logo] = 1
+settings[logo_path] = ""
+settings[logo_upload] = ""
+settings[default_favicon] = 1
+settings[favicon_path] = ""
+settings[favicon_upload] = ""
+settings[omega_enable_warning] = 1
+settings[omega_toggle_extension_layouts] = 0
+settings[omega_layout] = ""
+settings[omega_toggle_extension_assets] = 1
+settings[omega_libraries][selectivizr][status] = 1
+settings[omega_libraries][selectivizr][variant] = _default
+settings[omega_libraries][respond][status] = 0
+settings[omega_libraries][respond][variant] = _default
+settings[omega_libraries][pie][status] = 1
+settings[omega_libraries][pie][variant] = _default
+settings[omega_libraries][html5shiv][status] = 1
+settings[omega_libraries][html5shiv][variant] = _default
+settings[omega_toggle_extension_compatibility] = 1
+settings[omega_conditional_classes_html] = 1
+settings[omega_apple_touch] = 1
+settings[omega_cleartype] = 1
+settings[omega_handheld_friendly] = 1
+settings[omega_mobile_optimized] = 1
+settings[omega_viewport] = 1
+settings[omega_viewport_initial_scale] = _default
+settings[omega_viewport_user_scaleable] = 1
+settings[omega_viewport_minimum_scale] = _default
+settings[omega_viewport_maximum_scale] = _default
+settings[omega_chrome_edge] = 0
+settings[omega_internet_explorer_support] = _none
+settings[omega_toggle_extension_development] = 0
+settings[omega_enable_export_reminder] = ""
+settings[omega_rebuild_theme_registry] = ""
+settings[omega_rebuild_aggregates] = ""
+settings[omega_browser_width_indicator] = ""
+settings[omega_livereload] = ""
+settings[omega_livereload_script] = ""
+settings[omega_livereload_host] = ""
+settings[omega_livereload_port] = ""
+settings[omega_demo_regions] = ""
+settings[omega_toggle_extension_navbar] = 1
+settings[%%MACHINE_NAME%%_navbar_breakpoints][tiny] = tiny
+settings[%%MACHINE_NAME%%_navbar_breakpoints][small] = small
+settings[%%MACHINE_NAME%%_navbar_breakpoints][narrow] = narrow
+settings[%%MACHINE_NAME%%_navbar_wrapper] = .l-navigation

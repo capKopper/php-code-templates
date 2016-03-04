@@ -1,0 +1,38 @@
+@import "compass";
+@import "breakpoint";
+@import "toolkit";
+@import "susy";
+@import "rgbapng";
+@import "compass/css3/user-interface";
+@import "compass/css3/selection";
+
+@import "variables/grid";
+
+@include breakpoint($medium, true) {
+  .l-main-inside {
+    padding-left: 72px;
+    padding-right: 72px;
+  }
+
+  .l-page.has-sidebar-first {
+    .page-container {
+      @include clearfix;
+    }
+
+    .l-main {
+      float: right;
+      min-height: 1px;
+      width: percentage(744/1024);
+    }
+
+    .l-main-inside {
+      padding-left: 0;
+    }
+
+    .l-sidebar {
+      float: left;
+      min-height: 1px;
+      width: percentage(280/1024);
+    }
+  }
+}

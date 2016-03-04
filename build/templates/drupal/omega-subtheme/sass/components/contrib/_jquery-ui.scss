@@ -1,0 +1,43 @@
+.ui-widget-content {
+  font-family: Arial;
+  color: black;
+}
+
+.ui-tabs {
+  ul.ui-tabs-nav {
+    background: none;
+    display: inline-block;
+    margin-top: 12px;
+    padding: 0;
+    text-align: center;
+
+    li {
+      &.ui-state-default,
+      &.ui-state-focus,
+      &.ui-state-hover {
+        background: black;
+        border: 0 none;
+        margin: 0;
+        text-align: center;
+        text-transform: uppercase;
+
+        @include r-adjust-font-size-px(14px, 18.52px);
+        @include box-shadow(0px 3px 17px 0px rgba(0,0,0,0.06));
+        @include border-radius(5px 5px 0 0);
+      }
+
+      a.ui-tabs-anchor {
+        color: grey;
+        padding: 1em 2em;
+      }
+
+      &.ui-state-active {
+        background: white;
+
+        a {
+         color: white;
+        }
+      }
+    }
+  }
+}

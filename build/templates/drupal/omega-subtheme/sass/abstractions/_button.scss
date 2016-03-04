@@ -1,0 +1,46 @@
+$button-color: blue !default;
+$button-hover-color: green !default;
+$button-text-color: black !default;
+
+//@mixin button($color: color('grey-235'), $hover-color: white, $text-color: black) {
+@mixin button($options: ()) {
+  $settings: map-merge((
+    color: $button-color,
+    hover-color: $button-hover-color,
+    text-color: $button-text-color
+  ), $options);
+
+  @if map-get($settings, 'color') != null {
+    background-color: map-get($settings, 'color');
+    border: 1px solid map-get($settings, 'color');
+  }
+
+  @if map-get($settings, 'text-color') != null {
+    color: map-get($settings, 'text-color');
+  }
+
+  cursor: pointer;
+  display: inline-block;
+  text-transform: uppercase;
+  padding: .2em .8em;
+
+  @include r-adjust-font-size-to(85%, 1);
+  @include margin-leader(.5);
+  @include margin-trailer(.5);
+
+  @include breakpoint($medium, true) {
+    padding: .5em 1.8em;
+
+    @include margin-trailer(1);
+  }
+
+  &:hover {
+    @if map-get($settings, 'hover-color') != null {
+      background-color: map-get($settings, 'hover-color');
+    }
+
+    text-decoration: none;
+  }
+
+  @content;
+}

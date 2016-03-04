@@ -1,0 +1,42 @@
+/**
+ * Avoid to generate the same sprite again and again.
+ *
+ * Note that the sprite is still generated once per inclusion. So if you have
+ * several base SASS files that include each this file, the sprite will be
+ * verified and possibly generated for all inclusion.
+ */
+
+$sprite-urls: ();
+
+$sprite-maps: ();
+
+@each $name, $settings in $sprite-definitions {
+  @if str-index($name, "_") {
+    @error "Sprite name must be dasherized.";
+  }
+
+  $settings: map-merge($settings, (
+    glob: "sprites/#{$name}/*.png"
+  ));
+
+  $map: sprite-map($settings...);
+
+  // Caches sprite-url, because it slows down compass compile.
+  $sprite-urls: map-merge($sprite-urls, (
+      #{$name}: sprite-url($map)
+  )) !global;
+
+  $sprite-maps: map-merge($sprite-maps, (
+      #{$name}: $map
+  )) !global;
+}
+
+@mixin sprite-icon($name, $dimensions: false, $offset-x: 0, $offset-y: 0) {
+  $map: map_get($sprite-maps, 'icon');
+  $url: map_get($sprite-urls, 'icon');
+  background: $url sprite-position($map, $name, $offset-x, $offset-y) no-repeat;
+
+  @if $dimensions {
+    @include sprite-dimensions($map, $name);
+  }
+}

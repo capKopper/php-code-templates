@@ -1,0 +1,72 @@
+@mixin use-baseline($new-baseline) {
+  // Save the baseline original context
+  $initial-baseline: (
+    base-font-size: $base-font-size,
+    base-line-height: $base-line-height,
+  );
+
+  // Apply the new baseline context
+  $base-font-size: map-get($new-baseline, 'base-font-size') !global;
+  $base-line-height: map-get($new-baseline, 'base-line-height') !global;
+
+  @content;
+
+  // Reapply the initial baseline context
+  $base-font-size: map-get($initial-baseline, 'base-font-size') !global;
+  $base-line-height: map-get($initial-baseline, 'base-line-height') !global;
+}
+
+// @todo Hope the mixin interpolation issue will be resolved soon, to avoid code
+// duplication...
+// @see https://github.com/sass/sass/issues/626
+
+@mixin r-establish-baseline() {
+  @include establish-baseline();
+
+  @each $breakpoint-name, $baseline in $baselines {
+    @if map-has-key($breakpoints, $breakpoint-name) {
+      @include breakpoint(map-get($breakpoints, $breakpoint-name)) {
+        @include use-baseline($baseline) {
+          @include establish-baseline();
+        }
+      }
+    }
+    @else {
+      @warn "Invalid breakpoint `#{$breakpoint-name}`.";
+    }
+  }
+}
+
+@mixin r-adjust-font-size-to($to-size, $lines: lines-for-font-size($to-size), $from-size: $base-font-size) {
+  $original-to-size: $to-size;
+
+  // Sizes are based on the desktop (large) resolution...
+  $reference-baseline: map-get($baselines, 'large');
+  $to-size: $original-to-size * $base-font-size / map-get($reference-baseline, 'base-font-size');
+  @include adjust-font-size-to($to-size, $lines, $from-size);
+
+  @each $breakpoint-name, $baseline in $baselines {
+    @if map-has-key($breakpoints, $breakpoint-name) {
+      @include breakpoint(map-get($breakpoints, $breakpoint-name)) {
+        @include use-baseline($baseline) {
+          $to-size: $original-to-size * $base-font-size / map-get($reference-baseline, 'base-font-size');
+          @include adjust-font-size-to($to-size, $lines, $from-size);
+        }
+      }
+    }
+    @else {
+      @warn "Invalid breakpoint `#{$breakpoint-name}`.";
+    }
+  }
+}
+
+/**
+ * Specify a fixed font size and line height in pixels.
+ */
+@mixin r-adjust-font-size-px($to-size, $line-height: $to-size) {
+  // Sizes are based on the desktop (large) resolution...
+  $reference-baseline: map-get($baselines, 'large');
+  $grid-inverse: 1em / map-get($reference-baseline, 'base-line-height');
+
+  @include r-adjust-font-size-to($to-size, $grid-inverse*$line-height/$to-size);
+}

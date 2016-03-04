@@ -29,6 +29,7 @@ function %%MACHINE_NAME%%_entity_info() {
     'entity class' => 'Drupal\\%%MACHINE_NAME%%\\Entity\\%%ENTITY_CLASS_NAME%%',
     'controller class' => 'Drupal\\%%MACHINE_NAME%%\\Entity\\APIController\\%%ENTITY_CLASS_NAME%%',
     //'views controller class' => 'EntityDefaultViewsController',
+    'extra fields controller class' => 'Drupal\\%%MACHINE_NAME%%\\Entity\\ExtraFields\\%%ENTITY_CLASS_NAME%%',
     'base table' => '%%MACHINE_NAME%%',
     'fieldable' => TRUE,
     'exportable' => FALSE,
@@ -282,48 +283,6 @@ function %%MACHINE_NAME%%_file_download_access($field, $entity_type, $entity) {
   if ($entity_type == '%%MACHINE_NAME%%') {
     return field_access('view', $field, $entity_type, $entity);
   }
-}
-
-/**
- * Implements hook_field_extra_fields().
- */
-function %%MACHINE_NAME%%_field_extra_fields() {
-  $extra = &drupal_static(__FUNCTION__);
-
-  if (!isset($extra)) {
-    $types = %%MACHINE_NAME%%_get_types();
-
-    while(list($type) = each($types)) {
-      $extra['%%MACHINE_NAME%%'][$type] = array(
-        'form' => array(
-          'label' => array(
-            'label' => t('Label'),
-            'description' => t('%%ENTITY_TITLE%% label form element'),
-            'weight' => -5,
-          ),
-          'status' => array(
-            'label' => t('Status'),
-            'description' => t('%%ENTITY_TITLE%% status form element'),
-            'weight' => 35,
-          ),
-        ),
-        'display' => array(
-          'label' => array(
-            'label' => t('Label'),
-            'description' => t('%%ENTITY_TITLE%% label'),
-            'weight' => -5,
-          ),
-          'status' => array(
-            'label' => t('Status'),
-            'description' => t('Whether the %%ENTITY_TITLE%% is active or disabled'),
-            'weight' => 5,
-          ),
-        ),
-      );
-    }
-  }
-
-  return $extra;
 }
 
 /**

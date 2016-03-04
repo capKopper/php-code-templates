@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Defines the inline entity form controller for Model Entity.
+ * Defines the inline entity form controller for %%ENTITY_LOWERCASE_NAME%% Entity.
  */
 
 namespace Drupal\%%MACHINE_NAME%%\Entity\InlineFormController;

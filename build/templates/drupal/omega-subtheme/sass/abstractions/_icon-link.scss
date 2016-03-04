@@ -1,0 +1,11 @@
+@mixin icon-link($name) {
+  display: block;
+  overflow: hidden;
+  text-align: left;
+  text-decoration: none;
+  text-indent: 100%;
+  white-space: nowrap;
+
+  @include sprite-icon($name, true);
+  @content;
+}

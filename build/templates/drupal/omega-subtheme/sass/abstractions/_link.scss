@@ -1,0 +1,75 @@
+$link-color: blue !default;
+$link-decorate: false !default;
+$link-inverse: false !default;
+$link-hover-color: false !default;
+$link-focus-style: null !default;
+
+@mixin link($options: ()) {
+  $settings: map-merge((
+    color: $link-color,
+    decorate: $link-decorate,
+    inverse: $link-inverse,
+    hover-color: $link-hover-color,
+    focus-style: $link-focus-style
+  ), $options);
+
+
+  @if map-get($settings, 'color') != null {
+    color: map-get($settings, 'color');
+  }
+
+  @if map-get($settings, 'decorate') {
+    @if (map-get($settings, 'inverse')) {
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+    @else {
+      text-decoration: underline;
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+
+    @if map-get($settings, 'hover-color') {
+      &:hover {
+        color: map-get($settings, 'hover-color');
+      }
+    }
+
+    @if map-get($settings, 'focus-style') != null {
+      &:focus {
+        @if map-get($settings, 'focus-style') == 'same-as-hover' {
+          outline: 0 none;
+
+          @if (map-get($settings, 'inverse')) {
+            text-decoration: underline;
+          }
+          @else {
+            text-decoration: none;
+          }
+
+          @if map-get($settings, 'hover-color') {
+            color: map-get($settings, 'hover-color');
+          }
+        }
+        @elseif map-get($settings, 'focus-style') == 'outline' {
+          @if map-get($settings, 'color') != null {
+            outline: 1px dashed map-get($settings, 'color');
+          }
+          @else {
+            outline: 1px dashed inherit;
+          }
+        }
+        @elseif map-get($settings, 'focus-style') == 'none' {
+          outline: 0 none;
+        }
+      }
+    }
+  }
+
+  @content;
+}

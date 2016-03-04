@@ -1,0 +1,212 @@
+$navbar-wrapper: '.l-navigation' !default;
+$navbar-width: 80% !default;
+$navbar-hover-color: red !default;
+$navbar-translation-delay: 0.2s !default;
+
+.navbar-mask {
+  height: 100%;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: -100;
+
+  @include opacity(0);
+  @include transition(left 0.3s, opacity 0.3s);
+  @include rgba-background(rgba(0,0,0,0.8));
+
+  body.menu-visible & {
+    left: $navbar-width;
+    z-index: 50;
+
+    @include opacity(1);
+  }
+}
+
+body {
+  overflow-x: hidden;
+
+  &.menu-visible {
+    overflow: hidden;
+  }
+}
+
+.l-page {
+  left: 0;
+  position: relative;
+
+  @include transition(left 0.3s);
+
+  body.menu-visible & {
+    left: $navbar-width;
+  }
+}
+
+// Only apply the following styles if we are in the slide-left navbar mode.
+@include breakpoint(max-width $medium) {
+  a.navbar-button {
+    @include adjust-font-size-to(20px, 1);
+    background-color: white;
+    color: black;
+    display: block;
+    height: 60px;
+    text-align: center;
+    vertical-align: middle;
+    width: 50px;
+
+    &:hover,
+    &:focus {
+      background-color: grey;
+      color: white;
+      text-decoration: none;
+    }
+
+    &:before {
+      @include fa-icon($fa-var-bars);
+      font-size: 34px;
+      line-height: 60px;
+    }
+  }
+
+  #{$navbar-wrapper}.%%MACHINE_NAME%%-navbar-processed {
+    left: -$navbar-width;
+    position: fixed;
+    top: 64px;
+    width: $navbar-width;
+    z-index: 51;
+
+    @include transition(left 0.3s);
+
+    .navbar-content {
+      color: black;
+      margin: 0;
+      padding: 1em;
+
+      @include r-adjust-font-size-to(24px, 1);
+
+      @include breakpoint($narrow $medium) {
+        top: 64px;
+      }
+
+      ul.menu {
+        margin: 10px 0 0 0;
+        padding: 0;
+
+        li {
+          border-bottom: 1px solid grey;
+          list-style: none outside none;
+          padding: 5px 10px;
+
+          a,
+          span.nolink {
+            font-size: 80%;
+          }
+        }
+
+        // Level 2.
+        ul.menu {
+          left: auto;
+          overflow: hidden;
+          margin: 0;
+          padding: 0 0 0 5em;
+          position: static;
+          top: auto;
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  body.menu-visible #{$navbar-wrapper}.%%MACHINE_NAME%%-navbar-processed {
+    left: 0;
+  }
+}
+
+@include breakpoint($narrow $medium) {
+  #{$navbar-wrapper}.%%MACHINE_NAME%%-navbar-processed {
+    .navbar-content {
+      top: 64px;
+    }
+  }
+}
+
+// Style only for medium and large browser
+@include breakpoint($medium, true) {
+  #{$navbar-wrapper} {
+    &.%%MACHINE_NAME%%-navbar-processed a.navbar-button {
+      display: none;
+    }
+
+    .menu-name-main-menu {
+      & > ul.menu {
+        display: inline-block;
+        float: right;
+        font-weight: bold;
+        line-height: 1em;
+        list-style: none outside none;
+        margin: 0;
+        padding: 0;
+        text-transform: uppercase;
+      }
+
+      li {
+        float: left;
+        list-style: none outside none;
+        padding-bottom: 23px;
+
+        a,
+        span.nolink {
+          display: block;
+          padding: 2px 14px;
+        }
+
+        a:hover {
+          color: blue;
+          text-decoration: none;
+        }
+
+        &:hover ul.menu {
+          visibility: visible;
+
+          @include opacity(1);
+        }
+
+        // level 2 menu
+        /*& > ul.menu {
+          @include opacity(0);
+          @include transition(opacity 0.2s 0.1s ease-out, visibility 0.1s 0.1s linear);
+          background-color: white;
+          display: inline-block;
+          left: 0;
+          min-height: 50px;
+          padding-top: 18px;
+          position: absolute;
+          top: 64px;
+          visibility: hidden;
+
+          li {
+            float: none;
+            width: 250px;
+
+            a {
+              color: black;
+              font-size: 1.8em;
+              line-height: normal;
+              padding: 0;
+            }
+          }
+        }*/
+      }
+
+      // level 1 menu active trail
+      li.active-trail {
+        background-color: grey;
+
+        // Colors
+        & > a {
+          color: white;
+        }
+      }
+    }
+  }
+}

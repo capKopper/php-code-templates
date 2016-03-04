@@ -1,0 +1,14 @@
+@mixin color($color, $property: 'color', $default: 'inherit') {
+  #{$property}: color($color, $default);
+}
+
+@function color($color, $default: 'inherit') {
+  @if map-has-key($colors, $color) {
+    @return unquote(map-get($colors, $color));
+  }
+  @else {
+    @warn "Invalid color name `#{$color}`.";
+  }
+
+  @return $default;
+}

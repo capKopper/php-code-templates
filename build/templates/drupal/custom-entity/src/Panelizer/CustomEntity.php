@@ -156,10 +156,16 @@ class %%ENTITY_CLASS_NAME%% extends \PanelizerEntityDefault {
   }
 
   function render_entity($entity, $view_mode, $langcode = NULL, $args = array(), $address = NULL, $extra_contexts = array()) {
+    // Just add a special tag to the entity so we know it is being rendered by
+    // the Panelizer module, when the ENTITY_TYPE_view() hook is called.
+    $entity->panelizer_rendering = TRUE;
+
     $info = parent::render_entity($entity, $view_mode, $langcode, $args, $address, $extra_contexts);
     if (empty($entity->status)) {
       $info['classes_array'][] = '%%ENTITY_CSS_NAME%%-disabled';
     }
+
+    unset($entity->panelizer_rendering);
     return $info;
   }
 

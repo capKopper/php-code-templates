@@ -1,0 +1,25 @@
+$font-families: (
+  arial: Arial
+);
+
+$baselines: (
+  narrow: (
+    base-font-size: 14px,
+    base-line-height: 1.4em,
+  ),
+  medium: (
+    base-font-size: 13px,
+    base-line-height: 1.5em,
+  ),
+  large: (
+    base-font-size: 12px,
+    base-line-height: 1.6em,
+  )
+);
+
+// Default baseline.
+$base-font-size: 15px;
+$base-line-height: 1.3em;
+$rhythm-unit: 'rem';
+$rem-with-px-fallback: true;
+$round-to-nearest-half-line: true;

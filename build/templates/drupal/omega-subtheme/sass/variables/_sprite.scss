@@ -1,0 +1,35 @@
+/**
+ * This contains only the definitions of the sprites. Further processing is made
+ * in the abstractions/sprite @mixin.
+ *
+ * Each definition is related to a specific folder that contains the related
+ * images. Such folder is, for example:
+ *   [base-path-to-the-compass-images-folder]/sprites/[sprite-name]
+ *
+ * The sprite definition contains the basic settings, as well as some more
+ * advanced configuration for each existing image (spacing, position etc.).
+ * For example, if we have an image wich name is "arrow-right", we could
+ * override some defaut settings like this:
+ * @code
+ *   icon-arrow-right-spacing: 40px,
+ *   icon-arrow-right-position: 100%,
+ * @endcode
+ *
+ * The sprite @mixin may be used like this:
+ * @code
+ *   // Add the "arrow-right" background (image, position, repeat) and specify
+ *   // the element width and height.
+ *   @include sprite-icon(arrow-right, true);
+ *
+ *   // Move the image position vertically, 2 pixels higher than expected.
+ *   @include sprite-icon(arrow-right, false, 0, +2px);
+ * @endcode
+ */
+
+$sprite-definitions: (
+  "icon": (
+    position: 0%,
+    spacing: 5px,
+    repeat: no-repeat
+  )
+);

@@ -1,0 +1,158 @@
+/**
+ * Reset
+ */
+.flex-container a:hover,
+.flex-slider a:hover,
+.flex-container a:focus,
+.flex-slider a:focus {
+  outline: none;
+}
+
+.slides,
+.slides > li,
+.flex-control-nav,
+.flex-direction-nav {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/**
+ * Base styles
+ */
+.flexslider {
+  margin: 0;
+  padding: 0;
+
+  .slides {
+    @include clearfix;
+
+    & > li {
+      display: none;
+      -webkit-backface-visibility: hidden;
+    }
+
+    img {
+      width: 100%;
+      display: block;
+
+      @include user-select(none);
+    }
+  }
+}
+
+.flex-viewport {
+  max-height: 2000px;
+  @include transition(all 1s ease);
+}
+
+.loading .flex-viewport {
+  max-height: 300px;
+}
+
+.carousel li {
+  margin-right: 5px;
+}
+
+/**
+ * Custom styles
+ */
+.flexslider {
+  background-color: transparent;
+  border: 0 none;
+  margin: 0;
+  position: relative;
+  zoom: 1;
+
+  .slides {
+    zoom: 1;
+
+    img {
+      height: auto;
+
+      &.file-icon {
+        display: inline;
+        width: auto;
+      }
+    }
+  }
+}
+
+.flex-direction-nav {
+  *height: 0;
+
+  a {
+    display: block;
+    outline: 0 none;
+    overflow: hidden;
+    position: absolute;
+    text-decoration: none;
+    text-indent: -10000px;
+    top: 50%;
+    z-index: 10;
+
+    @include sprite-icon('slideshow-previous', true);
+
+    &:focus {
+      outline: 0 none;
+    }
+  }
+
+  .flex-prev {
+    left: 10px;
+  }
+
+  .flex-next {
+    right: 10px;
+
+    @include sprite-icon('slideshow-next');
+  }
+
+  .flex-disabled {
+    cursor: default;
+
+    @include opacity(0);
+  }
+}
+
+.flex-control-nav {
+  position: absolute;
+  bottom: 20px;
+  text-align: center;
+  width: 100%;
+  z-index: 20;
+
+  li {
+    display: inline-block;
+    margin: 0 2px;
+    zoom: 1;
+    *display: inline;
+  }
+
+  a {
+    border: 1px solid white;
+    cursor: pointer;
+    display: block;
+    height: 12px;
+    overflow: hidden;
+    text-indent: -10000px;
+    outline: 0 none;
+    width: 12px;
+
+    &:focus {
+      outline: 0 none;
+    }
+
+    @include border-radius(6px);
+
+    &.flex-active,
+    &:hover {
+      @include rgba-background(rgba(255, 255, 255, .61));
+    }
+
+    &.flex-active {
+      cursor: default;
+    }
+  }
+
+}

@@ -240,6 +240,76 @@
     </copy>
   </target>
 
+  <!-- =====================================================================
+       Omega subtheme.
+       ===================================================================== -->
+
+  <target name="drupal-omega-subtheme"
+          depends="init"
+          description="Create an Omega subtheme with advanced features.">
+    <!-- Theme name -->
+    <if>
+      <not>
+        <isset property="drupal.omega-subtheme.theme.machine-name"/>
+      </not>
+      <then>
+        <input propertyName="drupal.omega-subtheme.theme.machine-name" promptChar=":" defaultValue="mytheme">Enter the theme machine name</input>
+      </then>
+    </if>
+
+    <!-- Theme title -->
+    <if>
+      <not>
+        <isset property="drupal.omega-subtheme.theme.title"/>
+      </not>
+      <then>
+        <input propertyName="drupal.omega-subtheme.theme.title" promptChar=":" defaultValue="My theme">Enter the theme name (human version)</input>
+      </then>
+    </if>
+
+    <!-- Theme description -->
+    <if>
+      <not>
+        <isset property="drupal.omega-subtheme.theme.description"/>
+      </not>
+      <then>
+        <input propertyName="drupal.omega-subtheme.theme.description" defaultValue="Oemga subtheme.">Enter the theme description:</input>
+      </then>
+    </if>
+
+    <echo msg="Theme name: ${drupal.omega-subtheme.theme.machine-name}"/>
+    <echo msg="Theme title: ${drupal.omega-subtheme.theme.title}"/>
+    <echo msg="Theme description: ${drupal.omega-subtheme.theme.description}"/>
+
+    <filterchain id="token-replacements">
+      <replacetokens begintoken="%%" endtoken="%%">
+        <token key="MACHINE_NAME" value="${drupal.omega-subtheme.theme.machine-name}" />
+        <token key="THEME_TITLE" value="${drupal.omega-subtheme.theme.title}" />
+        <token key="THEME_DESCRIPTION" value="${drupal.omega-subtheme.theme.description}" />
+      </replacetokens>
+    </filterchain>
+
+    <!-- Copy files which name contain the theme name. -->
+    <copy todir="${build.dir}/${drupal.omega-subtheme.theme.machine-name}">
+      <fileset dir="${phing.dir}/build/templates/drupal/omega-subtheme" />
+      <mapper type="regexp" from="^(.*)mytheme(.*)$" to="\1${drupal.omega-subtheme.theme.machine-name}\2"/>
+      <filterchain refid="token-replacements" />
+    </copy>
+
+    <!-- Remaining files... -->
+    <copy todir="${build.dir}/${drupal.omega-subtheme.theme.machine-name}" overwrite="false">
+      <fileset dir="${phing.dir}/build/templates/drupal/omega-subtheme">
+        <exclude name="**mytheme**" />
+        <exclude name="**omega-subtheme**" />
+      </fileset>
+      <filterchain refid="token-replacements" />
+    </copy>
+  </target>
+
+  <!-- =====================================================================
+       Helpers.
+       ===================================================================== -->
+
   <taskdef name="css-identifier" classname="CssIdentifier"
            classpath="${phing.dir}/build/lib" />
 

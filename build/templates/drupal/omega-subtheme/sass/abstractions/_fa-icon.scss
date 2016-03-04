@@ -1,0 +1,23 @@
+/**
+ * From the _core.scss file provided in Font Awesome package.
+ */
+
+@mixin fa-icon($icon: null, $font-size: null) {
+  display: inline-block;
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  speak: none;
+  @include user-select(none);
+
+  @if $icon != null {
+    content: $icon;
+  }
+
+  @if font-size != null {
+    font-size: $font-size;
+  }
+}

@@ -1,0 +1,19 @@
+/**
+ * Breakpoints.
+ */
+
+// 76em for retine 1.0 / zoom 1.0
+$large: 1215px;
+// 48em for retine 1.0 / zoom 1.0
+$medium: 767px;
+// 30em for retine 1.0 / zoom 1.0
+$narrow: 479px;
+// 20em for retine 1.0 / zoom 1.0
+$small: 319px;
+
+$breakpoints: (
+  small: $small,
+  narrow: $narrow,
+  medium: $medium,
+  large: $large,
+);
