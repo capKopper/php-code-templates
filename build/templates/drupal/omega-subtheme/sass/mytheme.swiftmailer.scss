@@ -1,0 +1,43 @@
+@import "compass";
+@import "toolkit";
+
+@import "variables/**/*";
+@import "abstractions/**/*";
+
+table {
+  font-family: Arial;
+  font-size: 12px;
+  width: 100%;
+}
+
+thead {
+  th {
+    border-bottom: 2px solid color('grey-162');
+    padding: 1.5em;
+  }
+
+  tr {
+    text-align: left;
+  }
+}
+
+tfoot {
+  th {
+    font-weight: normal;
+    padding: 3em 1.5em;
+
+    a {
+      color: color('grey-45');
+    }
+  }
+
+  tr {
+    background-color: color('grey-235');
+    color: color('grey-162');
+    text-align: center;
+  }
+}
+
+.main {
+  margin: 1.5em;
+}

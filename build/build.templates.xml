@@ -304,6 +304,9 @@
       </fileset>
       <filterchain refid="token-replacements" />
     </copy>
+
+    <!-- Git ignore file -->
+    <copy file="${phing.dir}/build/templates/drupal/omega-subtheme/.gitignore" tofile="${build.dir}/${drupal.omega-subtheme.theme.machine-name}/.gitignore" />
   </target>
 
   <!-- =====================================================================

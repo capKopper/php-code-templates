@@ -56,7 +56,7 @@ class %%ENTITY_CLASS_NAME%% extends \EntityDefaultUIController {
       'page callback' => '%%MACHINE_NAME%%_page_view',
       'page arguments' => array(1),
       'access callback' => 'entity_access',
-      'access arguments' => array('view', $this->entityType),
+      'access arguments' => array('view', $this->entityType, 1),
     );*/
 
     return $items;

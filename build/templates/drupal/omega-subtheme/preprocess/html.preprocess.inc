@@ -12,67 +12,67 @@ function %%MACHINE_NAME%%_preprocess_html(&$variables) {
 
   $path = drupal_get_path('theme', '%%MACHINE_NAME%%');
 
-  // Add icon for Android and Chrome (Apple icons are already handled by Omega).
-  $meta = array(
-    '#tag' => 'link',
-    '#attributes' => array(
-      'rel' => 'icon',
-      'sizes' => '192x192',
-      'href' => file_create_url($path . '/android-192x192.png'),
-    ),
-  );
-  drupal_add_html_head($meta, 'android-192x192.png');
+  if ($metas = theme_get_setting('metaicons', '%%MACHINE_NAME%%')) {
+    // Put those meta in the bottom.
+    $weight = 20;
 
-  // Add META for Windows 8.
-  $metas = array(
-    'msapplication-tile-image' => array(
-      'name' => 'msapplication-TileImage',
-      'content' => file_create_url($path . '/apple-touch-icon-precomposed-144x144.png'),
-    ),
-    'msapplication-tile-color' => array(
-      'name' => 'msapplication-TileColor',
-      'content' => '#FFFFFF',
-    ),
-  );
+    // Extra meta for Windows 8, that is not handled through the theme settings.
+    if ($site_name = variable_get('site_name')) {
+      $metas['msapplication-application-name'] = array(
+        'name' => 'application-name',
+        'content' => $site_name,
+      );
+    }
 
-  if ($site_name = variable_get('site_name')) {
-    $metas['msapplication-application-name'] = array(
-      'name' => 'application-name',
-      'content' => $site_name,
-    );
-  }
+    foreach ($metas as $key => $meta_icon) {
+      $meta_icon += [
+        'tag' => 'meta',
+        'name' => $key,
+        'attributes' => [],
+        'icon' => NULL,
+        'content' => NULL,
+        'weight' => $weight,
+      ];
 
-  // Add META for IE 11.
-  $metas['msapplication-square70x70logo'] = array(
-    'name' => 'msapplication-square70x70logo',
-    'content' => file_create_url($path . '/ie-icon-precomposed-70x70.png'),
-  );
-  $metas['msapplication-square150x150logo'] = array(
-    'name' => 'msapplication-square150x150logo',
-    'content' => file_create_url($path . '/ie-icon-precomposed-150x150.png'),
-  );
-  $metas['msapplication-wide310x150logo'] = array(
-    'name' => 'msapplication-wide310x150logo',
-    'content' => file_create_url($path . '/ie-icon-precomposed-310x150.png'),
-  );
-  $metas['msapplication-square310x310logo'] = array(
-    'name' => 'msapplication-square310x310logo',
-    'content' => file_create_url($path . '/ie-icon-precomposed-310x310.png'),
-  );
+      if (isset($meta_icon['icon']) && is_file($meta_icon['icon'])) {
+        $meta_icon['content'] = file_create_url($path . '/' . $meta_icon['icon']);
+      }
+      // Fallback to content if set.
+      elseif (!isset($meta_icon['content'])) {
+        continue;
+      }
 
-  $weight = 20;
+      switch ($meta_icon['tag']) {
+        case 'link':
+          // For link tag, use content as value for href.
+          $meta_icon['attributes']['href'] = $meta_icon['content'];
 
-  foreach ($metas as $key => $meta) {
-    drupal_add_html_head(
-      array(
-        '#tag' => 'meta',
-        '#attributes' => array(
-          'name' => $meta['name'],
-          'content' => $meta['content'],
-        ),
-        '#weight' => $weight,
-      ),
-      $key);
-    $weight += .01;
+          $meta = array(
+            '#tag' => 'link',
+            '#attributes' => $meta_icon['attributes'],
+            '#weight' => $meta_icon['weight'],
+          );
+          break;
+
+        case 'meta':
+          $meta = [
+            '#tag' => 'meta',
+            '#attributes' => array(
+              'name' => $meta['name'],
+              'content' => $meta['content'],
+            ),
+            '#weight' => $meta_icon['weight'],
+          ];
+
+          break;
+
+        default:
+          // Ignore this one as tag is not valid.
+          continue;
+      }
+
+      drupal_add_html_head($meta, $key);
+      $weight += .01;
+    }
   }
 }

@@ -8,9 +8,15 @@
 
 // Clear the static element info cache if our alter hook was not called.
 // @see https://www.drupal.org/node/2351739.
-$info = element_info('managed_file');
+// Use a dummy name because if using a generic name like "info", we may cause
+// collision when the template file is loaded from the theme() function:
+// include_once DRUPAL_ROOT . '/' . $include_file;
+// Since the $info
+// This is the case for example when using Mail System, setting this theme as
+// the defaut for sending emails.
+$info_f4te478ert7t = element_info('managed_file');
 
-if (!isset($info['#after_build']) || !in_array('%%MACHINE_NAME%%_file_managed_after_build', $info['#after_build'])) {
+if (!isset($info_f4te478ert7t['#after_build']) || !in_array('%%MACHINE_NAME%%_file_managed_after_build', $info_f4te478ert7t['#after_build'])) {
   drupal_static_reset('element_info');
 }
 
@@ -126,5 +132,16 @@ function %%MACHINE_NAME%%_field_widget_options_select_form_alter(&$element, $for
 
   if ($instance['widget']['type'] === 'options_select' && !empty($instance['label'])) {
     $element['#title_display'] = 'invisible';
+  }
+}
+
+/**
+ * Implements hook_css_alter().
+ */
+function %%MACHINE_NAME%%_css_alter(&$css) {
+  $path = drupal_get_path('module', 'panopoly_images') . '/panopoly-images.css';
+
+  if (isset($css[$path])) {
+    unset($css[$path]);
   }
 }

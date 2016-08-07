@@ -5,6 +5,9 @@ screenshot = screenshot.png
 engine = phptemplate
 core = 7.x
 
+settings[capkopper_smtp][logo] = apple-touch-icon-precomposed.png
+settings[capkopper_smtp][css] = css/%%MACHINE_NAME%%.swiftmailer.css
+
 scripts[] = js/%%MACHINE_NAME%%.behaviors.js
 
 ; ========================================
@@ -30,9 +33,9 @@ regions[footer] = Footer
 ; Breakpoints
 ; ========================================
 breakpoints[tiny] = (max-width: 320px)
-breakpoints[small] = (min-width: 320px) and (max-width: 480px)
-breakpoints[narrow] = (min-width: 480px) and (max-width: 768px)
-breakpoints[medium] = (min-width: 768px) and (max-width: 1216px)
+breakpoints[small] = (min-width: 320px) and (max-width: 479px)
+breakpoints[narrow] = (min-width: 480px) and (max-width: 767px)
+breakpoints[medium] = (min-width: 768px) and (max-width: 1215px)
 breakpoints[wide] = (min-width: 1216px)
 
 ; ========================================

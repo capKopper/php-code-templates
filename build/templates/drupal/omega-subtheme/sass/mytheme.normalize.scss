@@ -1,4 +1,7 @@
 // Import the legacy variables (relevant for controlling compass-normalize).
+@import "variables/colors";
+@import "abstractions/colors";
+
 @import "variables/**/*";
 
 // Generate normalize.css.

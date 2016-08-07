@@ -72,8 +72,8 @@
       if (this.wrapper && !this.mobileState) {
         var behavior = this;
         behavior.mobileState = true;
-        behavior.button.on('touchstart click', behavior.toggleMenu);
-        behavior.mask.bind('touchstart click', behavior.toggleMenu);
+        behavior.button.on('click', behavior.toggleMenu);
+        behavior.mask.bind('click', behavior.toggleMenu);
       }
     },
 
@@ -81,8 +81,8 @@
       if (this.wrapper && this.mobileState) {
         var behavior = this;
         behavior.mobileState = false;
-        behavior.button.unbind('touchstart click');
-        behavior.mask.unbind('touchstart click');
+        behavior.button.unbind('click');
+        behavior.mask.unbind('click');
         $('.l-page').removeClass('menu-visible');
       }
     },

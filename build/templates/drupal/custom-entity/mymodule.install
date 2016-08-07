@@ -6,6 +6,21 @@
  */
 
 /**
+ * Implements hook_uninstall().
+ */
+function %%MACHINE_NAME%%_uninstall() {
+  // Bypass entity_load() as we cannot use it here.
+  $types = db_select('%%MACHINE_NAME%%_type')
+    ->fields('%%MACHINE_NAME%%_type')
+    ->execute()
+    ->fetchAllAssoc('type');
+
+  foreach (array_keys($types) as $type) {
+    field_attach_delete_bundle('%%MACHINE_NAME%%', $type);
+  }
+}
+
+/**
  * Implements hook_schema().
  */
 function %%MACHINE_NAME%%_schema() {

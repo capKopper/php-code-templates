@@ -4,7 +4,8 @@
  */
 
 
-.row {
+.row,
+.panel-panel-wrapper {
   @include box-sizing(border-box);
   @include clearfix;
 }

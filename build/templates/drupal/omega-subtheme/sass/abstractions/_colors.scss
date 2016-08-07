@@ -4,7 +4,7 @@
 
 @function color($color, $default: 'inherit') {
   @if map-has-key($colors, $color) {
-    @return unquote(map-get($colors, $color));
+    @return map-get($colors, $color);
   }
   @else {
     @warn "Invalid color name `#{$color}`.";

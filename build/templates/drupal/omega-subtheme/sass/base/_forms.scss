@@ -98,16 +98,16 @@ select.form-select {
       padding: 8px;
     }
 
-    div {
-      background: white image-url('select.png') no-repeat 100% 50%;
-      width: 50px;
+    //div {
+    //  background: white image-url('select.png') no-repeat 100% 50%;
+    //  width: 50px;
 
-      @include background-size(auto 70%);
+    //  @include background-size(auto 70%);
 
-      b {
-        display: none;
-      }
-    }
+    //  b {
+    //    display: none;
+    //  }
+    //}
   }
 
   .chosen-results {

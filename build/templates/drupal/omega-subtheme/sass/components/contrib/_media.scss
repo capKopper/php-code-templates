@@ -1,0 +1,18 @@
+/**
+ * Media image preview.
+ */
+.media-thumbnail {
+  width: 80px;
+  height: 80px;
+}
+.media-thumbnail img.panopoly-image-thumbnail{
+  margin-left: auto;
+  margin-right: auto;
+}
+/**
+ * Ensure all images don't bust out of the container in the media browser.
+ */
+.media-thumbnail img {
+  max-width: 100%;
+  height: auto;
+}

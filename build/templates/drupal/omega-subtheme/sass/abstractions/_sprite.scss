@@ -34,7 +34,9 @@ $sprite-maps: ();
 @mixin sprite-icon($name, $dimensions: false, $offset-x: 0, $offset-y: 0) {
   $map: map_get($sprite-maps, 'icon');
   $url: map_get($sprite-urls, 'icon');
-  background: $url sprite-position($map, $name, $offset-x, $offset-y) no-repeat;
+  background-image: map_get($sprite-urls, 'icon');
+  background-position: sprite-position($map, $name, $offset-x, $offset-y);
+  background-repeat: no-repeat;
 
   @if $dimensions {
     @include sprite-dimensions($map, $name);

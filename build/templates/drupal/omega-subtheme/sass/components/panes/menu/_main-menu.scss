@@ -43,7 +43,7 @@ body {
 }
 
 // Only apply the following styles if we are in the slide-left navbar mode.
-@include breakpoint(max-width $medium) {
+@include breakpoint(max-width ($medium - 1)) {
   a.navbar-button {
     @include adjust-font-size-to(20px, 1);
     background-color: white;
@@ -122,7 +122,7 @@ body {
   }
 }
 
-@include breakpoint($narrow $medium) {
+@include breakpoint($narrow ($medium - 1)) {
   #{$navbar-wrapper}.%%MACHINE_NAME%%-navbar-processed {
     .navbar-content {
       top: 64px;
