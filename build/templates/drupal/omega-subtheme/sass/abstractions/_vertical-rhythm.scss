@@ -70,3 +70,14 @@
 
   @include r-adjust-font-size-to($to-size, $grid-inverse*$line-height/$to-size);
 }
+
+/**
+ * Set the font size and line height for a given breakpoint.
+ */
+@mixin adjust-font-size-for-breakpoint($breakpoint-name, $to-size, $lines: lines-for-font-size($to-size), $from-size: $base-font-size) {
+  @if map-has-key($baselines, $breakpoint-name) {
+    @include use-baseline(map-get($baselines, $breakpoint-name)) {
+      @include adjust-font-size-to($to-size, $lines, $from-size);
+    }
+  }
+}

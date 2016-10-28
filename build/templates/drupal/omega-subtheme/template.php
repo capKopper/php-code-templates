@@ -6,18 +6,45 @@
  * %%THEME_TITLE%% theme.
  */
 
-// Clear the static element info cache if our alter hook was not called.
-// @see https://www.drupal.org/node/2351739.
-// Use a dummy name because if using a generic name like "info", we may cause
-// collision when the template file is loaded from the theme() function:
-// include_once DRUPAL_ROOT . '/' . $include_file;
-// Since the $info
-// This is the case for example when using Mail System, setting this theme as
-// the defaut for sending emails.
-$info_f4te478ert7t = element_info('managed_file');
+/**
+ * Ensure Omega (base theme) has been loaded.
+ *
+ * This avoid double call to %%MACHINE_NAME%%_element_info_alter() and ensure the
+ * function omega_extensions() exists when altering "element_info" data.
+ */
+if (function_exists('drupal_get_path')) {
+  $file = DRUPAL_ROOT . '/' . drupal_get_path('theme', 'omega') . '/template.php';
 
-if (!isset($info_f4te478ert7t['#after_build']) || !in_array('%%MACHINE_NAME%%_file_managed_after_build', $info_f4te478ert7t['#after_build'])) {
-  drupal_static_reset('element_info');
+  if (is_file($file)) {
+    require_once $file;
+  }
+}
+
+/**
+ * Call manually our alter hook if it was not already called.
+ * @see https://www.drupal.org/node/2351739.
+ *
+ * For performance reasons, we do not clear the static element info cache with
+ * the function drupal_static_reset().
+ *
+ * We use a dummy name because if using a generic name like "info", we may cause
+ * collision when the template file is loaded from the theme() function:
+ *
+ * <code>
+ * include_once DRUPAL_ROOT . '/' . $include_file;
+ * </code>
+ *
+ * This is the case for example when using Mail System, setting this theme as
+ * the defaut for sending emails.
+ */
+if (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'error') {
+  $info_f4te478ert7t = &drupal_static('element_info');
+
+  if (!isset($info_f4te478ert7t['managed_file']['#after_build']) || !in_array('%%MACHINE_NAME%%_file_managed_after_build', $info_f4te478ert7t['managed_file']['#after_build'])) {
+    %%MACHINE_NAME%%_element_info_alter($info_f4te478ert7t);
+  }
+
+  unset($info_f4te478ert7t);
 }
 
 /**
@@ -34,10 +61,37 @@ function %%MACHINE_NAME%%_theme_registry_alter(&$registry) {
     }
   }
 
-  // The mailsystem module alters the registry, but not properly... So it
-  // creates duplicates of preprocess and process hooks that are defined by
-  // Omega and its sub-themes.
   if (module_exists('mailsystem')) {
+    // Mail System integrates really bad with Omega, even with patch applied...
+    // When using a different theme than the admin theme for sending emails, and
+    // the theme is based on Omega, the omega_extensions() may be empty when
+    // including the Omega template.php file, so the include files are not
+    // loaded and the hook_theme_registry_alter() functions of the Omega
+    // extensions are not called...
+    // @see https://www.drupal.org/node/2051135() that fixes broken registry,
+    // but not Omega extensions issue.
+    foreach (omega_extensions() as $extension => $info) {
+      // Invoke the according hooks for every enabled extension.
+      if (omega_extension_enabled($extension)) {
+        // Give every enabled extension a chance to alter the theme registry.
+        $hook = $info['theme'] . '_extension_' . $extension . '_theme_registry_alter';
+
+        // Ensure the file has been loaded, otherwise load it and try again.
+        if (!function_exists($hook)) {
+          if (($file = $info['path'] . '/' . $extension . '.inc') && is_file($file)) {
+            require_once $file;
+
+            if (function_exists($hook)) {
+              $hook($registry);
+            }
+          }
+        }
+      }
+    }
+
+    // The mailsystem module alters the registry, but not properly... So it
+    // creates duplicates of preprocess and process hooks that are defined by
+    // Omega and its sub-themes.
     foreach ($registry as $hook => $item) {
       foreach (array('preprocess functions', 'process functions') as $phase) {
         if (isset($registry[$hook][$phase])) {
@@ -56,12 +110,17 @@ function %%MACHINE_NAME%%_element_info_alter(&$type) {
     $type['managed_file']['#after_build'][] = '%%MACHINE_NAME%%_file_managed_after_build';
   }
 
-  foreach (omega_extensions() as $extension => $info) {
-    if (omega_extension_enabled($extension)) {
-      $hook = $info['theme'] . '_extension_' . $extension . '_element_info_alter';
+  // This should always be TRUE, but this is more safe if a module includes the
+  // theme template.php file at early boostrap.
+  // In some cases (database failure...), Omega may not be loaded.
+  if (function_exists('omega_extensions')) {
+    foreach (omega_extensions() as $extension => $info) {
+      if (omega_extension_enabled($extension)) {
+        $hook = $info['theme'] . '_extension_' . $extension . '_element_info_alter';
 
-      if (function_exists($hook)) {
-        $hook($type);
+        if (function_exists($hook)) {
+          $hook($type);
+        }
       }
     }
   }

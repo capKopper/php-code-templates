@@ -19,12 +19,13 @@
 
 input.form-text,
 textarea.form-textarea {
-  @include box-sizing(border-box);
   background-color: color('grey-235');
   border: 0 none;
   height: 3.05em;
   padding: 0.4em 1.2em;
   width: 100%;
+
+  @include box-sizing(border-box);
 
   @include breakpoint($medium, true) {
     padding: 0.45em 1.2em;
@@ -41,18 +42,17 @@ textarea.form-textarea {
 }
 
 select.form-select {
-  @include appearance(none);
-  @include box-sizing(border-box);
   background-color: transparent;
   border: 0 none;
   cursor: pointer;
   height: 3.05em;
-  max-width: 100%; // This does not really work...
   outline: none;
   padding: 0.353em 1.2em;
   position: relative;
-  width: 100%;
   z-index: 1;
+
+  @include appearance(none);
+  @include box-sizing(border-box);
 
   @include breakpoint($medium, true) {
     padding: 0.39em 2.2em 0.39em 1.2em;

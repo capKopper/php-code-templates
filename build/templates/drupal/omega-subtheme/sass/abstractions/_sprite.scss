@@ -42,3 +42,46 @@ $sprite-maps: ();
     @include sprite-dimensions($map, $name);
   }
 }
+
+@mixin sprite-icon-resized($name, $percent) {
+  @if round($percent) != $percent {
+    @warn "Percent option should be an integer, `#{$percent}` given.";
+  }
+  @else if $percent < 1 {
+    @warn "Percent option should be a positive integer, `#{$percent}` given.";
+  }
+  @else if $percent == 100 {
+    @include background-size(auto auto);
+    @include sprite-icon($name, true);
+  }
+  @else {
+    background-image: map_get($sprite-urls, 'icon');
+
+    @include resize-sprite(map_get($sprite-maps, 'icon'), $name, $percent);
+  }
+}
+
+/**
+ * @see https://gist.github.com/darren131/3410875
+ *
+ * Added support for Retina.
+ */
+@mixin resize-sprite($map, $sprite, $percent) {
+  $spritePath: sprite-path($map);
+  $spriteWidth: image-width($spritePath);
+  $spriteHeight: image-height($spritePath);
+  $width: image-width(sprite-file($map, $sprite));
+  $height: image-height(sprite-file($map, $sprite));
+
+  $ratio: $percent/100;
+
+  // Handle Retina.
+  @if $percent > 100 {
+    $ratio: 100/$percent;
+  }
+
+  @include background-size(ceil($spriteWidth * $ratio) ceil($spriteHeight * $ratio));
+  width: ceil($width*$ratio);
+  height: ceil($height*$ratio);
+  background-position: 0 ceil(nth(sprite-position($map, $sprite), 2)  * $ratio);
+}

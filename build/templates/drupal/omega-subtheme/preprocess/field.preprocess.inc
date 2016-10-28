@@ -19,7 +19,7 @@ function %%MACHINE_NAME%%_preprocess_field(&$variables) {
   );
 
   $settings[$language->language] += array(
-    'colon' => ';&nbsp;',
+    'colon' => ':&nbsp;',
   );
 
   $variables['label_separator'] = $settings[$language->language]['colon'];

@@ -127,7 +127,7 @@ class %%ENTITY_CLASS_NAME%% extends \PanelizerEntityDefault {
         // were generated in this order, go through the original types list.
         $types = %%MACHINE_NAME%%_get_types();
         $row_index = 0;
-        foreach ($types as $bundle => %%MACHINE_NAME%%_type) {
+        foreach ($types as $bundle => $%%MACHINE_NAME%%_type) {
           $type = $types[$bundle];
 
           if ($this->is_panelized($bundle) && panelizer_administer_entity_bundle($this, $bundle)) {
@@ -136,9 +136,9 @@ class %%ENTITY_CLASS_NAME%% extends \PanelizerEntityDefault {
           else {
             $table['#rows'][$row_index][] = array('data' => '');
           }
+
           // Update row index for next pass.
-           $row_index++;
-          }
+          $row_index++;
         }
       }
     }

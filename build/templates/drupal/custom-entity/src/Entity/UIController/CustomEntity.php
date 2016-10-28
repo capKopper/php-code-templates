@@ -34,6 +34,7 @@ class %%ENTITY_CLASS_NAME%% extends \EntityDefaultUIController {
       'page arguments' => array($this->entityType),
       'access callback' => 'entity_access',
       'access arguments' => array('create', $this->entityType),
+      'type' => MENU_SUGGESTED_ITEM,
     );
 
     $items[$this->path . '/add/%'] = array(

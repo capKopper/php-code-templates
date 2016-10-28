@@ -13,6 +13,7 @@ group :development do
   #gem 'singularitygs'           # Alternative to the Susy grid framework.
   gem 'toolkit'                 # Compass utility from the fabulous Snugug.
   gem 'breakpoint'              # Manages CSS media queries.
+  gem 'chunky_png', '1.3.6'     # Fix version to avoid bug.
   gem 'oily_png'                # Faster Compass sprite generation.
   gem 'css_parser'              # Helps `compass stats` output statistics.
 

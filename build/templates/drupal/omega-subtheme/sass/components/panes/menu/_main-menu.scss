@@ -45,7 +45,6 @@ body {
 // Only apply the following styles if we are in the slide-left navbar mode.
 @include breakpoint(max-width ($medium - 1)) {
   a.navbar-button {
-    @include adjust-font-size-to(20px, 1);
     background-color: white;
     color: black;
     display: block;
@@ -53,6 +52,8 @@ body {
     text-align: center;
     vertical-align: middle;
     width: 50px;
+
+    @include adjust-font-size-to(20px, 1);
 
     &:hover,
     &:focus {
@@ -70,6 +71,8 @@ body {
 
   #{$navbar-wrapper}.%%MACHINE_NAME%%-navbar-processed {
     left: -$navbar-width;
+    overflow-x: hidden;
+    overflow-y: auto;
     position: fixed;
     top: 64px;
     width: $navbar-width;

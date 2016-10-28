@@ -28,7 +28,6 @@
     fileStyle: function(context, settings) {
       if (settings.filestyle) {
         for (var id in settings.filestyle) {
-          console.log(settings.filestyle[id]);
           $(id).once('jfilestyle').jfilestyle(settings.filestyle[id]);
         }
       }

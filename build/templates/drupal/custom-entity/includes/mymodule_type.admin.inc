@@ -136,7 +136,7 @@ function %%MACHINE_NAME%%_type_form_submit(&$form, &$form_state) {
   drupal_set_message(t('%%ENTITY_TITLE%% type saved.'));
 
   if ($form_state['triggering_element']['#parents'][0] == 'save_continue') {
-    $form_state['redirect'] = '%%ENTITY_TYPE_ADMIN_PATH%%/manage/' . strtr($%%MACHINE_NAME%%_type->type, '_', '-') . '/fields';
+    $form_state['redirect'] = '%%ENTITY_TYPE_ADMIN_PATH%%/manage/' . $%%MACHINE_NAME%%_type->type . '/fields';
   }
   else {
     $form_state['redirect'] = '%%ENTITY_TYPE_ADMIN_PATH%%';

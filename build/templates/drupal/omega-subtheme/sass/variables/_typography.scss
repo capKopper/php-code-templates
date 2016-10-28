@@ -1,5 +1,12 @@
 $font-families: (
-  arial: Arial
+  arial: (
+    name: 'Arial, sans-serif',
+  ),
+  /*satisfy: (
+    name: '"Satisfy", cursive',
+    font-style: normal,
+    font-weight: normal,
+  ),*/
 );
 
 $baselines: (

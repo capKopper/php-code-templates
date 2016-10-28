@@ -1,4 +1,4 @@
-@mixin icon-link($name) {
+@mixin icon-link($name, $resize: 100) {
   display: block;
   overflow: hidden;
   text-align: left;
@@ -6,6 +6,6 @@
   text-indent: 100%;
   white-space: nowrap;
 
-  @include sprite-icon($name, true);
+  @include sprite-icon-resized($name, $resize);
   @content;
 }

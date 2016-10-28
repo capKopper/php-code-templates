@@ -1,8 +1,29 @@
-@mixin font-family($font-name) {
-  @if map-has-key($font-families, $font-name) {
-    font-family: unquote(map-get($font-families, $font-name));
+@mixin font-family($alias) {
+  @if map-has-key($font-families, $alias) {
+    $font: map-get($font-families, $alias);
+
+    @if map-has-key($font, 'name') {
+      $font-name: unquote(map-get($font, 'name'));
+      $font: map-remove($font, ('name'));
+
+      $properties: "font-style" "font-weight";
+
+      @each $property in $properties {
+        @if map-has-key($font, $property) {
+          #{$property}: map-get($font, $property);
+          $font: map-remove($font, ($property));
+        }
+      }
+
+      font-family: $font-name;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    @else {
+      @warn "Missing font name for the font family alias `#{$alias}`.";
+    }
   }
   @else {
-    @warn "Invalid font family name `#{$font-name}`.";
+    @warn "Invalid font family alias `#{$alias}`.";
   }
 }

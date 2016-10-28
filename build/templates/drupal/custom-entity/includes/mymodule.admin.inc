@@ -46,7 +46,7 @@ function %%MACHINE_NAME%%_form($form, &$form_state, %%ENTITY_CLASS_ALIAS%% $%%MA
   );
 
   $form['actions'] = array(
-    '#type' => 'container',
+    '#type' => 'actions',
     '#attributes' => array('class' => array('form-actions')),
     '#weight' => 400,
   );

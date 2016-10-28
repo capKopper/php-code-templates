@@ -11,6 +11,8 @@ $narrow: 480px;
 // 20em for retina 1.0 / zoom 1.0
 $small: 320px;
 
+$retina: min-resolution 1.5dppx;
+
 $breakpoints: (
   small: $small,
   narrow: $narrow,

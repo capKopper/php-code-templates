@@ -20,6 +20,7 @@ stylesheets[all][] = css/%%MACHINE_NAME%%.no-query.css
 stylesheets[all][] = radix_layouts.css
 stylesheets[all][] = flexslider_img.css
 stylesheets[all][] = menu_minipanels.css
+stylesheets[all][] = panels.css
 
 ; ========================================
 ; Regions
@@ -30,13 +31,34 @@ regions[content] = Content
 regions[footer] = Footer
 
 ; ========================================
+; Meta icons
+; ========================================
+; Add icon for Android and Chrome (Apple icons are already handled by Omega).
+metaicons[android-192x192][tag] = link
+metaicons[android-192x192][attributes][rel] = icon
+metaicons[android-192x192][attributes][sizes] = 192x192
+metaicons[android-192x192][icon] = android-192x192.png
+; Add META for Windows 8.
+metaicons[msapplication-tile-image][name] = msapplication-TileImage
+metaicons[msapplication-tile-image][icon] = apple-touch-icon-precomposed-144x144.png
+metaicons[msapplication-tile-color][name] = msapplication-TileColor
+metaicons[msapplication-tile-color][content] = #FFFFFF
+; Add META for IE 11.
+metaicons[msapplication-tile-square70x70logo][icon] = ie-icon-precomposed-70x70.png
+metaicons[msapplication-tile-square150x150logo][icon] = ie-icon-precomposed-150x150.png
+metaicons[msapplication-tile-wide310x150logo][icon] = ie-icon-precomposed-310x150.png
+metaicons[msapplication-tile-square310x310logo][icon] = ie-icon-precomposed-310x310.png
+metaicons[msapplication-tile-square70x70logo][icon] = ie-icon-precomposed-70x70.png
+metaicons[msapplication-tile-square70x70logo][icon] = ie-icon-precomposed-70x70.png
+
+; ========================================
 ; Breakpoints
 ; ========================================
 breakpoints[tiny] = (max-width: 320px)
 breakpoints[small] = (min-width: 320px) and (max-width: 479px)
 breakpoints[narrow] = (min-width: 480px) and (max-width: 767px)
 breakpoints[medium] = (min-width: 768px) and (max-width: 1215px)
-breakpoints[wide] = (min-width: 1216px)
+breakpoints[large] = (min-width: 1216px)
 
 ; ========================================
 ; Settings
